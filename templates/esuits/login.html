@@ -25,14 +25,14 @@
         <h1 class="h3 mb-3 font-weight-normal">ログイン</h1>
 
 
-        <label for="inputEmail" class="sr-only">メールアドレス</label>
+        <!-- <label for="inputEmail" class="sr-only">メールアドレス</label>
         <input type="text" id="inputEmail" class="form-control" name="email" placeholder="メールアドレス" required
-            autofocus>
+            autofocus> -->
+        <label for="inputUsername" class="sr-only">ユーザー名</label>
+        <input type="text" id="inputUsername" class="form-control" name="username" placeholder="ユーザー名" required autofocus>
+
         <label for="inputPassword" class="sr-only">パスワード</label>
         <input type="password" id="inputPassword" class="form-control" name="password" placeholder="パスワード" required>
-        <div class="checkbox mb-3">
-
-        </div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">ログイン</button>
         <p>新規登録は<a href="{% url 'signup'%}">こちら</a>から</p>
     </form>

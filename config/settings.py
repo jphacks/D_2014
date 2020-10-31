@@ -125,7 +125,7 @@ PUBLIC_PATHS = [
     '/login/',
     '/admin/',
     '/signup/',
-    '/index/',
+    '',
 ]
 
 

@@ -24,11 +24,11 @@ class SignupView(View):
         password = request.POST['password']
 
         # ユーザーを追加
-        if CustomUserModel.objects.filter(email=email).exists():
-            return render(request, 'esuits/signup.html', {'error': 'このメールアドレスは既に登録されています．'})
+        if CustomUserModel.objects.filter(username=username).exists():
+            return render(request, 'esuits/signup.html', {'error': 'このユーザー名  は既に登録されています．'})
         else:
             CustomUserModel.objects.create_user(username, email, password)
-            return redirect('login')
+            return redirect('index')
 
 
 class LoginView(View):
@@ -38,15 +38,13 @@ class LoginView(View):
         return render(request, 'esuits/login.html')
 
     def post(self, request, *args, **kwargs):
-        email = request.POST['email']
+        username = request.POST['username']
         password = request.POST['password']
-        user = authenticate(request, email=email, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
-            print('login success')
             login(request, user)
-            return redirect('index', email=email)
+            return redirect('index')
         else:
-            print('login failed')
             return redirect('login')
 
 
@@ -55,3 +53,19 @@ class IndexView(View):
     def get(self, request):
         template_name = 'esuits/index.html'
         return render(request, template_name)
+
+
+class HomeView(View):
+    '''ログイン後のトップページ'''
+    def get(self, request):
+        login_username = request.user.username
+        template = 'esuites/home.html'
+        es_group_list = ESGroupModel.objects.filter(author=login_username)
+        es_group_editing_list = es_group_list.filter(is_editing=True)
+        es_group_finished_list = es_group_list.filter(is_editing=False)
+        context = {
+            'editing': es_group_editing_list,
+            'finished': es_group_finished_list,
+        }
+    
+        return render(request, template, context)
