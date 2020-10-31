@@ -49,6 +49,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # ログインしていなくてもアクセスできるページを指定
+    'global_login_required.GlobalLoginRequiredMiddleware', 
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -118,11 +120,18 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'esuits.CustomUserModel'
 
+# ログインしていなくてもアクセスできるURL
+PUBLIC_PATHS = [
+    '/login/',
+    '/admin/',
+    '/signup/',
+    '',
+]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-# AUTH_USER_MODEL = 'es_hub.CustomUserModel'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
