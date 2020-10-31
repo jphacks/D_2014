@@ -1,0 +1,29 @@
+{% extends 'esuits/base.html' %}
+
+{% load static %}
+
+{% block title %}
+ホーム
+{% endblock %}
+
+{% block head %}
+<!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+<main>
+
+    <h1>ホーム</h1>
+    <p>これはログイン後， 最初に表示されるページです</p>
+    <p>編集中</p>
+    {% for es in editing %}
+        {{es.company}}
+    {% endfor %}
+    <p>提出済み</p>
+    {% for es in finished %}
+        {{es.company}}
+    {% endfor %}
+        
+
+</main>
+{% endblock %}
