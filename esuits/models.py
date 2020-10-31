@@ -33,7 +33,7 @@ class ESGroupModel(models.Model):
     class Meta(object):
         db_table = 'esgroup_table'
 
-    company = models.CharField(verbose_name='会社名', max_length=100, blank=True, null=True)
+    company = models.CharField(verbose_name='会社名', max_length=100)
     event_type = models.CharField(verbose_name='イベントタイプ', max_length=50, blank=True, null=True)
     company_url = models.URLField(verbose_name='企業ホームページ', max_length=200)
     author = models.ForeignKey(CustomUserModel, verbose_name='作成者', on_delete=models.CASCADE)
