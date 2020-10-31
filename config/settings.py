@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'es_hub',
+    'esuits',
 ]
 
 MIDDLEWARE = [
@@ -114,6 +114,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+
+AUTH_USER_MODEL = 'esuits.CustomUserModel'
 
 
 # Static files (CSS, JavaScript, Images)
