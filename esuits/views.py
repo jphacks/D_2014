@@ -28,7 +28,7 @@ class SignupView(View):
             return render(request, 'esuits/signup.html', {'error': 'このユーザー名  は既に登録されています．'})
         else:
             CustomUserModel.objects.create_user(username, email, password)
-            return redirect('index')
+            return redirect('home')
 
 
 class LoginView(View):
@@ -43,7 +43,7 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')
+            return redirect('home')
         else:
             return redirect('login')
 
@@ -56,11 +56,17 @@ class IndexView(View):
 
 
 class HomeView(View):
-    '''ログイン後のトップページ'''
+    '''
+    ログイン後のトップページ
+    ES一覧を表示
+    '''
+
     def get(self, request):
         login_username = request.user.username
-        template = 'esuites/home.html'
-        es_group_list = ESGroupModel.objects.filter(author=login_username)
+        login_user_id = request.user.id
+        print(login_user_id)
+        template = 'esuits/home.html'
+        es_group_list = ESGroupModel.objects.filter(author=login_user_id)
         es_group_editing_list = es_group_list.filter(is_editing=True)
         es_group_finished_list = es_group_list.filter(is_editing=False)
         context = {
