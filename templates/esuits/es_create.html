@@ -12,9 +12,19 @@ ES作成ページ
 
 {% block content %}
 <main>
-
-  <h1>ES作成ページ</h1>
-  <p>ここで企業名や質問を登録します</p>
+  <div class="contaier">
+    <h1>ES作成ページ</h1>
+    <p>ここで企業名や質問を登録します</p>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <p>ES情報</p>
+      {{es_form.as_p}}
+      <p>------------------------------</p>
+      <p>ポスト</p>
+      {{post_form.as_p}}
+      <input type="submit" value="作成する">
+    </form>
+  </div>
 
 </main>
 {% endblock %}
