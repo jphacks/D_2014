@@ -39,6 +39,7 @@ class ESGroupModel(models.Model):
     author = models.ForeignKey(CustomUserModel, verbose_name='作成者', on_delete=models.CASCADE)
     is_editing = models.BooleanField(verbose_name='作成中', default=True)
     created_date = models.DateTimeField(verbose_name='作成日時', default=timezone.now)
+    
     def __str__(self):
         return self.event_name
 
