@@ -1,0 +1,62 @@
+{% extends 'esuits/base.html' %}
+
+{% load static %}
+
+{% block title %}
+NewsAPI
+{% endblock %}
+
+{% block head %}
+<!-- BootstrapのCSS読み込み -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- jQuery読み込み -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- BootstrapのJS読み込み -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<main>
+  <h1>動作確認用ページ</h1>
+  <form>
+    {% csrf_token %}
+    <fieldset>
+        <div>
+            {{form.as_p}}
+        </div>
+        <div id="news">
+
+        </div>
+        <button type="button" id="kensaku">検索</button>
+    </fieldset>
+
+  </form>
+</main>
+
+<script>
+    $(function(){
+        $('#kensaku').on('click', function(){
+            let name = $('input[name$=name]').val();
+            $.ajax({
+                url: "{% url 'esuits:samples:newsapi_sample' %}",
+                type: "GET",
+                data: {
+                    "name": name,
+                }
+            }).done((data)=>{
+                let news_list = data['news'];
+                src = "";
+                for (let i = 0;i < news_list.length;i+=1){
+                    let title = news_list[i]['title'];
+                    let link = news_list[i]['url'];
+                    src += '<h5>' + title + '</h5>';
+                    src += '<a href="' + link + '">リンク</a>';
+                }
+                $('#news').html(src);
+            }).fail((data)=>{
+                alert('エラーが発生しました');
+            });
+        });
+    });
+</script>
+{% endblock %}
