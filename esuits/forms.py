@@ -34,3 +34,10 @@ class AnswerQuestionForm(forms.ModelForm):
         fields = (
             'answer',
         )
+
+AnswerQuestionFormSet = forms.inlineformset_factory(
+    parent_model=ESGroupModel,
+    model=PostModel,
+    form=AnswerQuestionForm,
+    extra=0,
+)

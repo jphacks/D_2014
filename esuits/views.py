@@ -3,7 +3,7 @@ from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from .models import CustomUserModel, TagModel, PostModel, ESGroupModel
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from .forms import CreateESForm, CreatePostForm, AnswerQuestionForm
+from .forms import CreateESForm, CreatePostForm, AnswerQuestionFormSet
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -161,12 +161,6 @@ class EsEditView(View):
                 post_set = PostModel.objects.filter(es_group_id=es_group_id)
                 # print(post_set)
 
-                AnswerQuestionFormSet = forms.inlineformset_factory(
-                    parent_model=ESGroupModel,
-                    model=PostModel,
-                    form=AnswerQuestionForm,
-                    extra=0,
-                )
                 formset = AnswerQuestionFormSet(instance=es_info)
 
                 # 関連したポスト一覧
