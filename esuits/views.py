@@ -73,5 +73,45 @@ class HomeView(View):
             'editing': es_group_editing_list,
             'finished': es_group_finished_list,
         }
-    
+
         return render(request, template, context)
+
+
+class EsEditView(View):
+    '''
+    ESの質問に回答するページ
+    '''
+
+    def get(self, request, es_group_id):
+        template_name = 'esuits/es_edit.html'
+
+        if ESGroupModel.objects.filter(pk=es_group_id).exists():
+            es_info = ESGroupModel.objects.get(pk=es_group_id)
+            print('es_info.author.pk: ' + str(es_info.author.pk))
+            print('request.user.pk: ' + str(request.user.pk))
+
+            if (es_info.author.pk == request.user.pk):
+                company_name = es_info.company
+                post_list = PostModel.objects.filter(es_group_id=es_group_id)
+                print(post_list)
+
+                context = {
+                    'message': 'OK',
+                    'post_list': post_list,
+                    'es_info': es_info,
+                }
+                return render(request, template_name, context)
+            else:
+                context = {
+                    'message': '違う人のESなので表示できません',
+                    'post_list': [],
+                    'es_info': {},
+                }
+                return render(request, template_name, context)
+        else:
+            context = {
+                'message': '指定されたESは存在しません',
+                'post_list': [],
+                'es_info': {},
+            }
+            return render(request, template_name, context)
