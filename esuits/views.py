@@ -149,6 +149,7 @@ class EsEditView(View):
         template_name = 'esuits/es_edit.html'
 
         if ESGroupModel.objects.filter(pk=es_group_id).exists():
+            # 指定されたESが存在し，それが自分のESの場合
             es_info = ESGroupModel.objects.get(pk=es_group_id)
             print('es_info.author.pk: ' + str(es_info.author.pk))
             print('request.user.pk: ' + str(request.user.pk))
@@ -165,6 +166,7 @@ class EsEditView(View):
                 }
                 return render(request, template_name, context)
             else:
+                # 指定されたESが存在するが，それが違う人のESの場合
                 context = {
                     'message': '違う人のESなので表示できません',
                     'post_list': [],
@@ -172,6 +174,7 @@ class EsEditView(View):
                 }
                 return render(request, template_name, context)
         else:
+            # 指定されたESが存在しない場合
             context = {
                 'message': '指定されたESは存在しません',
                 'post_list': [],
