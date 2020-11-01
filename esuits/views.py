@@ -3,11 +3,12 @@ from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from .models import CustomUserModel, TagModel, PostModel, ESGroupModel
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from .forms import CreateESForm, CreatePostForm
+from .forms import CreateESForm, CreatePostForm, AnswerQuestionForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django import forms
 
 # Create your views here.
 
@@ -156,28 +157,40 @@ class EsEditView(View):
 
             if (es_info.author.pk == request.user.pk):
                 company_name = es_info.company
-                post_list = PostModel.objects.filter(es_group_id=es_group_id)
-                print(post_list)
+                post_set = PostModel.objects.filter(es_group_id=es_group_id)
+                print(post_set)
+
+                AnswerQuestionFormSet = forms.inlineformset_factory(
+                    parent_model=ESGroupModel,
+                    model=PostModel,
+                    form=AnswerQuestionForm,
+                    extra=0,
+                )
+                formset = AnswerQuestionFormSet(instance=es_info)
 
                 context = {
                     'message': 'OK',
-                    'post_list': post_list,
                     'es_info': es_info,
+                    'zipped_posts_info': zip(post_set, formset)
                 }
                 return render(request, template_name, context)
             else:
                 # 指定されたESが存在するが，それが違う人のESの場合
                 context = {
                     'message': '違う人のESなので表示できません',
-                    'post_list': [],
                     'es_info': {},
+                    'zipped_posts_info': (),
                 }
                 return render(request, template_name, context)
         else:
             # 指定されたESが存在しない場合
             context = {
                 'message': '指定されたESは存在しません',
-                'post_list': [],
                 'es_info': {},
+                'zipped_posts_info': (),
             }
             return render(request, template_name, context)
+
+    def post(self, request, es_group_id):
+        # TODO: 質問に対する答えを更新してDBに格納する処理を書く
+        return redirect('home')

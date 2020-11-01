@@ -21,10 +21,14 @@ ES編集ページ
   <h2>企業名: {{ es_info.company }}</h2>
   <p>選考種別: {{ es_info.event_type }}</p>
 
-  {% for post in post_list %}
-  <h3>{{ post.question }}</h3>
-  <p>{{ post.answer }}</p>
-  {% endfor %}
+  <h2>質問と回答の一覧</h2>
+  <form action="" method="POST">
+    {% for post, form in zipped_posts_info %}
+    <h3>{{ post.question }}</h3>
+    <p>{{ form }}</p>
+    {% endfor %}
+    <input type="submit" value="保存する">
+  </form>
 
 </main>
 {% endblock %}
