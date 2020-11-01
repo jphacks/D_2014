@@ -186,6 +186,7 @@ class EsEditView(View):
                 context = {
                     'message': 'OK',
                     'es_info': es_info,
+                    'formset_management_form': formset.management_form,
                     'zipped_posts_info': zip(post_set, formset, related_posts_list),
                     'news_list': news_list,
                     'company_info': company_info,

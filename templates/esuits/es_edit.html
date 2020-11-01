@@ -23,6 +23,9 @@ ES編集ページ
 
   <h2>質問と回答の一覧</h2>
   <form action="" method="POST">
+    {% csrf_token %}
+    {{ formset_management_form }}
+
     {% for post, form, related_posts in zipped_posts_info %}
       <h3>{{ post.question }}</h3>
       <p>{{ form }}</p>
