@@ -38,7 +38,8 @@ class ESGroupModel(models.Model):
     company = models.CharField(verbose_name='会社名', max_length=100)
     event_type = models.CharField(verbose_name='イベントタイプ', max_length=50, blank=True, null=True)
     company_url = models.URLField(verbose_name='企業ホームページ', max_length=200)
-    author = models.ForeignKey(CustomUserModel, verbose_name='作成者', on_delete=models.CASCADE, blank=True)
+    author = models.ForeignKey(CustomUserModel, verbose_name='作成者',
+                               on_delete=models.CASCADE, blank=True)
     is_editing = models.BooleanField(verbose_name='作成中', default=True)
     created_date = models.DateTimeField(verbose_name='作成日時', default=timezone.now, blank=True)
 
@@ -66,8 +67,9 @@ class PostModel(models.Model):
     # company = models.CharField(verbose_name='会社名', max_length=50, blank=True, null=True)
     # state = models.CharField(verbose_name='状況', max_length=50, blank=True, null=True)
     # author = models.ForeignKey(CustomUserModel, verbose_name='ユーザ名', on_delete=models.CASCADE)
-    es_group_id = models.ForeignKey(ESGroupModel, verbose_name='ES名', on_delete=models.CASCADE, blank=True, null=True)
-    char_num = models.IntegerField(null=True, blank=True)
+    es_group_id = models.ForeignKey(ESGroupModel, verbose_name='ES名',
+                                    on_delete=models.CASCADE, blank=True, null=True)
+    char_num = models.IntegerField(default=0, blank=True)
 
     def __str__(self):
         return self.question

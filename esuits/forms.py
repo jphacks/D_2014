@@ -11,9 +11,9 @@ class CreateESForm(forms.ModelForm):
             'event_type',
             'company_url',
             'is_editing',
-            'author',
-            )
-    
+            # 'author',
+        )
+
 
 class CreatePostForm(forms.ModelForm):
     '''ポスト作成のためのフォーム'''
