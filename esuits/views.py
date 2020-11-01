@@ -157,10 +157,7 @@ class EsEditView(View):
 
             if (es_info.author == request.user):
                 # 指定されたESが存在し，それが自分のESの場合
-                company_name = es_info.company
                 post_set = PostModel.objects.filter(es_group_id=es_group_id)
-                # print(post_set)
-
                 formset = AnswerQuestionFormSet(instance=es_info)
 
                 # 関連したポスト一覧
