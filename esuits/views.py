@@ -155,7 +155,7 @@ class EsEditView(View):
             print('es_info.author.pk: ' + str(es_info.author.pk))
             print('request.user.pk: ' + str(request.user.pk))
 
-            if (es_info.author.pk == request.user.pk):
+            if (es_info.author == request.user):
                 # 指定されたESが存在し，それが自分のESの場合
                 company_name = es_info.company
                 post_set = PostModel.objects.filter(es_group_id=es_group_id)
@@ -170,7 +170,7 @@ class EsEditView(View):
                 formset = AnswerQuestionFormSet(instance=es_info)
 
                 # 関連したポスト一覧
-                all_posts_by_login_user = PostModel.objects.filter(es_group_id__author__pk=request.user.pk)
+                all_posts_by_login_user = PostModel.objects.filter(es_group_id__author=request.user)
                 related_posts_list = [
                   all_posts_by_login_user.filter(tags__in=post.tags.all()) for post in post_set
                 ]
