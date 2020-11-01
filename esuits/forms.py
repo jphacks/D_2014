@@ -40,4 +40,5 @@ AnswerQuestionFormSet = forms.inlineformset_factory(
     model=PostModel,
     form=AnswerQuestionForm,
     extra=0,
+    can_delete = False
 )
