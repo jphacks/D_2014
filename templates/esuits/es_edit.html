@@ -41,5 +41,20 @@ ES編集ページ
     <input type="submit" value="保存する">
   </form>
 
+  <div>
+    <div>
+      <h2>企業の情報</h2>
+      <p>ワードクラウドなどをのせる</p>
+    </div>
+
+    <div>
+      <h2>ニュース一覧</h2>
+      {% for news in news_list %}
+        <p>{{ news.title }}</p>
+        <a href="{{ news.url }}">{{ news.url }}</a>
+      {% endfor %}
+    </div>
+  </div>
+
 </main>
 {% endblock %}

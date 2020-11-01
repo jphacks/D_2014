@@ -168,8 +168,11 @@ class EsEditView(View):
                 print('related_posts_list')
                 print(related_posts_list)
 
-                # ニュース関連
-                news_list = []
+                # ニュース関連 (今はダミー)
+                news_list = [
+                  {'title': 'ダミーニュース1', 'url': 'https://news.yahoo.co.jp/pickup/6375312'},
+                  {'title': 'ダミーニュース2', 'url': 'https://news.yahoo.co.jp/pickup/6375301'},
+                ]
 
                 # 企業の情報　(ワードクラウドなど)
                 company_info = []
@@ -227,7 +230,10 @@ class EsEditView(View):
                 print(related_posts_list)
 
                 # ニュース関連
-                news_list = []
+                news_list = [
+                  {'title': 'ダミーニュース1', 'url': 'https://news.yahoo.co.jp/pickup/6375312'},
+                  {'title': 'ダミーニュース2', 'url': 'https://news.yahoo.co.jp/pickup/6375301'},
+                ]
 
                 # 企業の情報　(ワードクラウドなど)
                 company_info = []
