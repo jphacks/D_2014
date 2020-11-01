@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
-from .models import CustomUserModel, TagModel, PostModel, ESGroupModel
+from django import forms
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from .forms import CreateESForm, CreatePostForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
 
+from .forms import CreateESForm, CreatePostForm
+from .models import CustomUserModel, TagModel, PostModel, ESGroupModel
 # Create your views here.
 
 
@@ -37,6 +37,7 @@ class SignupView(View):
         else:
             return redirect('login')
 
+
 class LoginView(View):
     '''ログイン'''
 
@@ -56,6 +57,7 @@ class LoginView(View):
 
 class IndexView(View):
     '''トップページを表示'''
+
     def get(self, request):
         template_name = 'esuits/index.html'
         return render(request, template_name)
@@ -90,10 +92,15 @@ class ESCreateView(View):
         template = 'esuits/es_create.html'
         tags = TagModel.objects.filter(author=login_user_id)
         num_tags = len(tags)
-
+        # ポストフォームはformsetを使用
+        post_formset = forms.formset_factory(
+            form=CreatePostForm,
+            extra=4,
+        )
         context = {
             'es_form': CreateESForm(),
             'post_form': CreatePostForm(),
+            'post_formset': post_formset,
             'tags': tags,
             'num_tags': num_tags,
             'user_id': login_user_id,
@@ -131,12 +138,20 @@ class ESCreateView(View):
         request_copy['char_num'] = len(request.POST['answer'])
         request_copy['es_group_id'] = es_group_id
 
-        post_form = CreatePostForm(request_copy)
-        if post_form.is_valid():
-            post_form.save()
+        # post_form = CreatePostForm(request_copy)
+        post_formset = forms.formset_factory(
+            form=CreatePostForm,
+            extra=4,
+        )
+        # if post_form.is_valid():
+        #     post_form.save()
+        #     print('saved post_form')
+        # else:
+        #     print('failed save post_form')
+        if post_formset.is_valid():
+            post_formset.save()
             print('saved post_form')
         else:
             print('failed save post_form')
 
         return redirect('home')
-     
