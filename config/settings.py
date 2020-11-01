@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # ログインしていなくてもアクセスできるページを指定
-    'global_login_required.GlobalLoginRequiredMiddleware', 
+    'global_login_required.GlobalLoginRequiredMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'

@@ -21,7 +21,15 @@ ES作成ページ
       {{es_form.as_p}}
       <p>------------------------------</p>
       <p>ポスト</p>
-      {{post_form.as_p}}
+      <!-- 複数のフォームを作成するために必要 -->
+      {{ post_formset.management_form }}
+
+      {% for post_form in post_formset.forms %}
+      <!-- {{post_form}} -->
+      {{post_form.question}}
+      {{post_form.tags}}
+      <br>
+      {% endfor %}
       <input type="submit" value="作成する">
     </form>
   </div>

@@ -1,14 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
-from .models import CustomUserModel, TagModel, PostModel, ESGroupModel
+from django import forms
 from django.urls import reverse_lazy, reverse
 from django.views import View
-from .forms import CreateESForm, CreatePostForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q
+from pprint import pprint
 
+from .forms import CreateESForm, CreatePostForm
+from .models import CustomUserModel, TagModel, PostModel, ESGroupModel
 # Create your views here.
 
 
@@ -37,6 +38,7 @@ class SignupView(View):
         else:
             return redirect('login')
 
+
 class LoginView(View):
     '''ログイン'''
 
@@ -56,6 +58,7 @@ class LoginView(View):
 
 class IndexView(View):
     '''トップページを表示'''
+
     def get(self, request):
         template_name = 'esuits/index.html'
         return render(request, template_name)
@@ -68,7 +71,8 @@ class HomeView(View):
     '''
 
     def get(self, request):
-        # login_username = request.user.username
+        login_username = request.user.username
+        print(login_username)
         login_user_id = request.user.id
         # print(login_user_id)
         template = 'esuits/home.html'
@@ -78,6 +82,7 @@ class HomeView(View):
         context = {
             'editing': es_group_editing_list,
             'finished': es_group_finished_list,
+            'username': login_username,
         }
         return render(request, template, context)
 
@@ -90,10 +95,16 @@ class ESCreateView(View):
         template = 'esuits/es_create.html'
         tags = TagModel.objects.filter(author=login_user_id)
         num_tags = len(tags)
-
+        # ポストフォームはformsetを使用
+        PostFormset = forms.formset_factory(
+            # PostModel,
+            form=CreatePostForm,
+            extra=4,
+        )
         context = {
             'es_form': CreateESForm(),
-            'post_form': CreatePostForm(),
+            # 'post_form': CreatePostForm(),
+            'post_formset': PostFormset(),
             'tags': tags,
             'num_tags': num_tags,
             'user_id': login_user_id,
@@ -102,10 +113,6 @@ class ESCreateView(View):
 
     def post(self, request, *args, **kwargs):
         login_user_id = request.user.id
-        request_copy = request.POST.copy()
-        # authorを指定
-        request_copy['author'] = login_user_id
-
         # es情報を取得(必要なし)
         # company = request_copy['company']
         # event_type = request_copy['event_type']
@@ -114,29 +121,52 @@ class ESCreateView(View):
 
         # 先にESフォームからの情報をデータベースに格納
         # es_form = CreateESForm(request_copy, prefix='es')
-        es_form = CreateESForm(request_copy)
-        print(request_copy)
+        es_form = CreateESForm(request.POST)
+        print(request.POST)
         print('----------------------')
         print(es_form)
         if es_form.is_valid():
             # form.save()では，作成されたレコードが返ってくる．作成されたレコードのpkを取得
-            es_group_id = es_form.save().pk
+            es_file = es_form.save(commit=False)
+            es_file.author = CustomUserModel.objects.get(pk=login_user_id)
+            es_group_id = es_form.save()
             print('saved es_form')
         else:
             print('failed save es_form')
 
         # postフォームをデータベースに格納
 
-        # 回答の文字数を取得
-        request_copy['char_num'] = len(request.POST['answer'])
-        request_copy['es_group_id'] = es_group_id
+        post_num = int(request.POST['form-TOTAL_FORMS'])
+        # 値を変更する
+        # 各ポストのes group idを更新
+        # for post_num in range(post_num):
+        #     post_name = 'form-' + str(post_num) + '-'
+        #     es_group_id_key = post_name + 'es_group_id'
+        #     request_copy[es_group_id_key] = es_group_id
+        # print(request_copy)
 
-        post_form = CreatePostForm(request_copy)
-        if post_form.is_valid():
-            post_form.save()
+        # 回答の文字数を取得
+        # request_copy['char_num'] = len(request.POST['answer'])
+        # request_copy['es_group_id'] = es_group_id
+
+        # post_form = CreatePostForm(request_copy)
+
+        PostFormset = forms.modelformset_factory(
+            model=PostModel,
+            form=CreatePostForm,
+            extra=post_num,
+        )
+        post_formset = PostFormset(request.POST)
+        if post_formset.is_valid():
+            print('post_formset')
+            print(post_formset.is_valid())
+            post_forms = post_formset.save(commit=False)
+            for post_form in post_forms:
+                post_form.es_group_id = es_group_id
+                post_form.save()
             print('saved post_form')
         else:
             print('failed save post_form')
 
         return redirect('home')
-     
+        # return redirect('es_create')
