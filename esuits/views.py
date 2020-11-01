@@ -150,12 +150,13 @@ class EsEditView(View):
         template_name = 'esuits/es_edit.html'
 
         if ESGroupModel.objects.filter(pk=es_group_id).exists():
-            # 指定されたESが存在し，それが自分のESの場合
+            # ESの存在を確認
             es_info = ESGroupModel.objects.get(pk=es_group_id)
             print('es_info.author.pk: ' + str(es_info.author.pk))
             print('request.user.pk: ' + str(request.user.pk))
 
             if (es_info.author.pk == request.user.pk):
+                # 指定されたESが存在し，それが自分のESの場合
                 company_name = es_info.company
                 post_set = PostModel.objects.filter(es_group_id=es_group_id)
                 print(post_set)
