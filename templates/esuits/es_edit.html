@@ -23,9 +23,17 @@ ES編集ページ
 
   <h2>質問と回答の一覧</h2>
   <form action="" method="POST">
-    {% for post, form in zipped_posts_info %}
-    <h3>{{ post.question }}</h3>
-    <p>{{ form }}</p>
+    {% for post, form, related_posts in zipped_posts_info %}
+      <h3>{{ post.question }}</h3>
+      <p>{{ form }}</p>
+
+      <h4>関連するポスト</h4>
+      <p>----------</p>
+      {% for post in related_posts %}
+        <p>{{ post.question }}</p>
+        <p>{{ post.answer }}</p>
+        <p>----------</p>
+      {% endfor %}
     {% endfor %}
     <input type="submit" value="保存する">
   </form>

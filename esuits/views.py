@@ -159,7 +159,7 @@ class EsEditView(View):
                 # 指定されたESが存在し，それが自分のESの場合
                 company_name = es_info.company
                 post_set = PostModel.objects.filter(es_group_id=es_group_id)
-                print(post_set)
+                # print(post_set)
 
                 AnswerQuestionFormSet = forms.inlineformset_factory(
                     parent_model=ESGroupModel,
@@ -169,10 +169,26 @@ class EsEditView(View):
                 )
                 formset = AnswerQuestionFormSet(instance=es_info)
 
+                # 関連したポスト一覧
+                all_posts_by_login_user = PostModel.objects.filter(es_group_id__author__pk=request.user.pk)
+                related_posts_list = [
+                  all_posts_by_login_user.filter(tags__in=post.tags.all()) for post in post_set
+                ]
+                print('related_posts_list')
+                print(related_posts_list)
+
+                # ニュース関連
+                news_list = []
+
+                # 企業の情報　(ワードクラウドなど)
+                company_info = []
+
                 context = {
                     'message': 'OK',
                     'es_info': es_info,
-                    'zipped_posts_info': zip(post_set, formset)
+                    'zipped_posts_info': zip(post_set, formset, related_posts_list),
+                    'news_list': news_list,
+                    'company_info': company_info,
                 }
                 return render(request, template_name, context)
             else:
