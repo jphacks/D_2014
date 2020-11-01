@@ -202,4 +202,58 @@ class EsEditView(View):
 
     def post(self, request, es_group_id):
         # TODO: 質問に対する答えを更新してDBに格納する処理を書く
-        return redirect('home')
+        template_name = 'esuits/es_edit.html'
+
+        if ESGroupModel.objects.filter(pk=es_group_id).exists():
+            # ESの存在を確認
+            es_info = ESGroupModel.objects.get(pk=es_group_id)
+            print('es_info.author.pk: ' + str(es_info.author.pk))
+            print('request.user.pk: ' + str(request.user.pk))
+
+            if (es_info.author == request.user):
+                # 指定されたESが存在し，それが自分のESの場合
+                post_set = PostModel.objects.filter(es_group_id=es_group_id)
+                formset = AnswerQuestionFormSet(data=request.POST, instance=es_info)
+
+                if formset.is_valid():
+                    formset.save()
+
+                # 関連したポスト一覧
+                all_posts_by_login_user = PostModel.objects.filter(es_group_id__author=request.user)
+                related_posts_list = [
+                  all_posts_by_login_user.filter(tags__in=post.tags.all()) for post in post_set
+                ]
+                print('related_posts_list')
+                print(related_posts_list)
+
+                # ニュース関連
+                news_list = []
+
+                # 企業の情報　(ワードクラウドなど)
+                company_info = []
+
+                context = {
+                    'message': 'OK',
+                    'es_info': es_info,
+                    'formset_management_form': formset.management_form,
+                    'zipped_posts_info': zip(post_set, formset, related_posts_list),
+                    'news_list': news_list,
+                    'company_info': company_info,
+                }
+                return render(request, template_name, context)
+            else:
+                # 指定されたESが存在するが，それが違う人のESの場合
+                context = {
+                    'message': '違う人のESなので表示できません',
+                    'es_info': {},
+                    'zipped_posts_info': (),
+                }
+                return render(request, template_name, context)
+        else:
+            # 指定されたESが存在しない場合
+            context = {
+                'message': '指定されたESは存在しません',
+                'es_info': {},
+                'zipped_posts_info': (),
+            }
+            return render(request, template_name, context)
