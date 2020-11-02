@@ -36,9 +36,9 @@ class SignupView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('esuits:home')
         else:
-            return redirect('login')
+            return redirect('esuits:login')
 
 
 class LoginView(View):

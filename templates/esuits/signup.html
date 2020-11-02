@@ -30,7 +30,8 @@
         {% endif %}
 
         <label for="inputUsername" class="sr-only">ユーザー名</label>
-        <input type="text" id="inputUsername" class="form-control" name="username" placeholder="ユーザー名" required autofocus>
+        <input type="text" id="inputUsername" class="form-control" name="username" placeholder="ユーザー名" required
+            autofocus>
 
         <label for="inputEmail" class="sr-only">メールアドレス</label>
         <input type="text" id="inputEmail" class="form-control" name="email" placeholder="メールアドレス" required autofocus>
@@ -39,7 +40,7 @@
         <input type="password" id="inputPassword" class="form-control" name="password" placeholder="パスワード" required>
 
         <button class="btn btn-lg btn-primary btn-block" type="submit">ユーザー登録</button>
-        <p>ログインは<a href="{% url 'login'%}">こちら</a>から</p>
+        <p>ログインは<a href="{% url 'esuits:login'%}">こちら</a>から</p>
     </form>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
