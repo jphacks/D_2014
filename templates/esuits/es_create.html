@@ -27,7 +27,20 @@ ES作成ページ
       {% for post_form in post_formset.forms %}
       <!-- {{post_form}} -->
       {{post_form.question}}
-      {{post_form.tags}}
+      {% if num_tags == 0 %}
+      <div class="box">
+        <p>タグはまだありません</p>
+      </div>
+
+      {% else %}
+      <p><label for="id_tags"></label> <select size="{{num_tags}}" name="tags" id="id_tags" multiple>
+
+          {% for tag in tags %}
+          <option value="{{tag}}">{{tag.tag_name}}</option>
+          {% endfor %}
+
+        </select></p>
+      {% endif %}
       <br>
       {% endfor %}
       <input type="submit" value="作成する">
