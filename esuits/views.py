@@ -146,6 +146,30 @@ class EsEditView(View):
     ESの質問に回答するページ
     '''
 
+    # 過去に投稿したポストのうち関連するものを取得
+    def _get_related_posts_list(self, request, es_group_id):
+        post_set = PostModel.objects.filter(es_group_id=es_group_id)
+        all_posts_by_login_user = PostModel.objects.filter(es_group_id__author=request.user)
+
+        related_posts_list = [
+          all_posts_by_login_user
+              .filter(tags__in=post.tags.all())
+              .exclude(pk=post.pk)
+              for post in post_set
+        ]
+        return related_posts_list
+
+    def _get_news_list(self, request, es_group_id):
+        news_list = [
+          {'title': 'ダミーニュース1', 'url': 'https://news.yahoo.co.jp/pickup/6375312'},
+          {'title': 'ダミーニュース2', 'url': 'https://news.yahoo.co.jp/pickup/6375301'},
+        ]
+        return news_list
+
+    def _get_company_info(self, request, es_group_id):
+        company_info = {}
+        return company_info
+
     def get(self, request, es_group_id):
         template_name = 'esuits/es_edit.html'
 
@@ -161,21 +185,13 @@ class EsEditView(View):
                 formset = AnswerQuestionFormSet(instance=es_info)
 
                 # 関連したポスト一覧
-                all_posts_by_login_user = PostModel.objects.filter(es_group_id__author=request.user)
-                related_posts_list = [
-                  all_posts_by_login_user.filter(tags__in=post.tags.all()) for post in post_set
-                ]
-                print('related_posts_list')
-                print(related_posts_list)
+                related_posts_list = self._get_related_posts_list(request, es_group_id)
 
                 # ニュース関連 (今はダミー)
-                news_list = [
-                  {'title': 'ダミーニュース1', 'url': 'https://news.yahoo.co.jp/pickup/6375312'},
-                  {'title': 'ダミーニュース2', 'url': 'https://news.yahoo.co.jp/pickup/6375301'},
-                ]
+                news_list = self._get_news_list(request, es_group_id)
 
                 # 企業の情報　(ワードクラウドなど)
-                company_info = []
+                company_info = self._get_company_info(request, es_group_id)
 
                 context = {
                     'message': 'OK',
@@ -222,21 +238,13 @@ class EsEditView(View):
                     formset.save()
 
                 # 関連したポスト一覧
-                all_posts_by_login_user = PostModel.objects.filter(es_group_id__author=request.user)
-                related_posts_list = [
-                  all_posts_by_login_user.filter(tags__in=post.tags.all()) for post in post_set
-                ]
-                print('related_posts_list')
-                print(related_posts_list)
+                related_posts_list = self._get_related_posts_list(request, es_group_id)
 
                 # ニュース関連
-                news_list = [
-                  {'title': 'ダミーニュース1', 'url': 'https://news.yahoo.co.jp/pickup/6375312'},
-                  {'title': 'ダミーニュース2', 'url': 'https://news.yahoo.co.jp/pickup/6375301'},
-                ]
+                news_list = self._get_news_list(request, es_group_id)
 
                 # 企業の情報　(ワードクラウドなど)
-                company_info = []
+                company_info = self._get_company_info(request, es_group_id)
 
                 context = {
                     'message': 'OK',
