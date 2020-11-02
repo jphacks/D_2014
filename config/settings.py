@@ -68,7 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'esuits.context_processors.header_context_processor', #追加
+                'esuits.context_processors.common_context_processor', #追加
             ],
         },
     },
