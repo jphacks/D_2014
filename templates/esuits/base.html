@@ -11,6 +11,12 @@
 </head>
 
 <body>
+<!-- headerを書く -->
+{% if is_authenticated %}
+ログイン済ユーザ向け
+{% else %}
+ログインしてないユーザ向け
+{% endif %}
 {% block content %}{% endblock %}
 </body>
 </html>
