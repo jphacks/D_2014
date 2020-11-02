@@ -26,3 +26,19 @@ class CreatePostForm(forms.ModelForm):
             'char_num',
             'es_group_id',
         )
+
+class AnswerQuestionForm(forms.ModelForm):
+    '''ポスト (ESの中の一つの質問) に答えるためのフォーム'''
+    class Meta:
+        model = PostModel
+        fields = (
+            'answer',
+        )
+
+AnswerQuestionFormSet = forms.inlineformset_factory(
+    parent_model=ESGroupModel,
+    model=PostModel,
+    form=AnswerQuestionForm,
+    extra=0,
+    can_delete = False
+)
