@@ -10,8 +10,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from pprint import pprint
 from django.db.models import Q
 
-from .forms import CreateESForm, CreatePostForm
-from .models import CustomUserModel, TagModel, PostModel, ESGroupModel
+from .forms import CreateESForm, CreatePostForm, CreateTagForm
+from .models import CustomUserModel, TagModel, PostModel, ESGroupModel,
 # Create your views here.
 
 
@@ -88,6 +88,7 @@ class HomeView(View):
         }
 
         return render(request, template, context)
+
 
 class ESCreateView(View):
     '''ポストの質問を作成'''
@@ -172,6 +173,7 @@ class ESCreateView(View):
 
         return redirect('home')
 
+
 class EsEditView(View):
     '''
     ESの質問に回答するページ
@@ -183,18 +185,18 @@ class EsEditView(View):
         all_posts_by_login_user = PostModel.objects.filter(es_group_id__author=request.user)
 
         related_posts_list = [
-          all_posts_by_login_user
-              .filter(tags__in=post.tags.all())
-              .exclude(pk=post.pk)
-              for post in post_set
+            all_posts_by_login_user
+            .filter(tags__in=post.tags.all())
+            .exclude(pk=post.pk)
+            for post in post_set
         ]
         return related_posts_list
 
     # 関連するニュースの取得 (いまはダミー)
     def _get_news_list(self, request, es_group_id):
         news_list = [
-          {'title': 'ダミーニュース1', 'url': 'https://news.yahoo.co.jp/pickup/6375312'},
-          {'title': 'ダミーニュース2', 'url': 'https://news.yahoo.co.jp/pickup/6375301'},
+            {'title': 'ダミーニュース1', 'url': 'https://news.yahoo.co.jp/pickup/6375312'},
+            {'title': 'ダミーニュース2', 'url': 'https://news.yahoo.co.jp/pickup/6375301'},
         ]
         return news_list
 
@@ -304,3 +306,44 @@ class EsEditView(View):
                 'zipped_posts_info': (),
             }
             return render(request, template_name, context)
+
+
+class TagCreateView(View):
+    '''タグを作成'''
+
+    def get(self, request, *args, **kwargs):
+        login_user_id = request.user.id
+        template = 'esuits/tag_create.html'
+        tags = TagModel.objects.filter(author=login_user_id)
+        TagFormset = forms.formset_factory(
+            # PostModel,
+            form=CreateTagForm,
+            extra=2,
+        )
+        context = {
+            'tag_formset': TagFormset,
+            'tags': tags,
+            'user_id': login_user_id,
+        }
+        return render(request, template, context)
+
+    def post(self, request, *args, **kwargs):
+        login_user_id = request.user.id
+        post_num = int(request.POST['form-TOTAL_FORMS'])
+        TagFormset = forms.modelformset_factory(
+            model=TagModel,
+            form=CreateTagForm,
+            extra=post_num,
+        )
+        tag_formset = TagFormset(request.POST)
+
+        if tag_formset.is_valid():
+            tag_forms = tag_formset.save(commit=False)
+            for tag_form in tag_forms:
+                tag_form.author = CustomUserModel.objects.get(pk=login_user_id)
+                tag_form.save()
+            print('saved post_form')
+        else:
+            print('failed save post_form')
+
+        return redirect('home')

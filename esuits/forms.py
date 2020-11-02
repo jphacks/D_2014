@@ -1,5 +1,5 @@
 from django import forms
-from .models import ESGroupModel, PostModel
+from .models import ESGroupModel, PostModel, TagModel
 
 
 class CreateESForm(forms.ModelForm):
@@ -27,6 +27,7 @@ class CreatePostForm(forms.ModelForm):
             'es_group_id',
         )
 
+
 class AnswerQuestionForm(forms.ModelForm):
     '''ポスト (ESの中の一つの質問) に答えるためのフォーム'''
     class Meta:
@@ -35,10 +36,18 @@ class AnswerQuestionForm(forms.ModelForm):
             'answer',
         )
 
+
 AnswerQuestionFormSet = forms.inlineformset_factory(
     parent_model=ESGroupModel,
     model=PostModel,
     form=AnswerQuestionForm,
     extra=0,
-    can_delete = False
+    can_delete=False
 )
+
+
+class CreateTagForm(forms.ModelForm):
+    '''タグ作成のためのフォーム'''
+    class Meta:
+        model = TagModel
+        fields = ('tag_name',)
