@@ -159,6 +159,7 @@ class EsEditView(View):
         ]
         return related_posts_list
 
+    # 関連するニュースの取得 (いまはダミー)
     def _get_news_list(self, request, es_group_id):
         news_list = [
           {'title': 'ダミーニュース1', 'url': 'https://news.yahoo.co.jp/pickup/6375312'},
@@ -166,6 +167,7 @@ class EsEditView(View):
         ]
         return news_list
 
+    # 企業の情報を取得 (今は空)
     def _get_company_info(self, request, es_group_id):
         company_info = {}
         return company_info
