@@ -11,7 +11,7 @@ from pprint import pprint
 from django.db.models import Q
 
 from .forms import CreateESForm, CreatePostForm, CreateTagForm
-from .models import CustomUserModel, TagModel, PostModel, ESGroupModel,
+from .models import CustomUserModel, TagModel, PostModel, ESGroupModel
 # Create your views here.
 
 
@@ -102,7 +102,7 @@ class ESCreateView(View):
         PostFormset = forms.formset_factory(
             # PostModel,
             form=CreatePostForm,
-            extra=4,
+            extra=2,
         )
         context = {
             'es_form': CreateESForm(),
