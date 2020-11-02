@@ -11,4 +11,6 @@ urlpatterns = [
 
     #esuits_utilsの動作確認用
     path('samples/', include('esuits.samples.urls')),
+    path('escreate/', views.ESCreateView.as_view(), name='es_create'),
+    path('es_edit/<int:es_group_id>', views.EsEditView.as_view(), name='es_edit'),
 ]
