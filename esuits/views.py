@@ -53,9 +53,9 @@ class LoginView(View):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('esuits:home')
         else:
-            return redirect('login')
+            return redirect('esuits:login')
 
 
 class IndexView(View):
@@ -171,7 +171,7 @@ class ESCreateView(View):
         else:
             print('failed save post_form')
 
-        return redirect('home')
+        return redirect('esuits:home')
 
 
 class EsEditView(View):
@@ -346,4 +346,4 @@ class TagCreateView(View):
         else:
             print('failed save post_form')
 
-        return redirect('home')
+        return redirect('esuits:home')
