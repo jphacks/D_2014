@@ -1,5 +1,5 @@
 from django import forms
-from .models import ESGroupModel, PostModel, TagModel
+from ..models import ESGroupModel, PostModel, TagModel
 
 
 class CreateESForm(forms.ModelForm):
