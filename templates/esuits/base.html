@@ -12,11 +12,16 @@
 
 <body>
 <!-- headerを書く -->
+<header>
 {% if is_authenticated %}
-ログイン済ユーザ向け
+<a class="ESuits-header" href="{% url 'esuits:home' %}">ESuits</a>
 {% else %}
-ログインしてないユーザ向け
+<a class="ESuits-header" href="{% url 'esuits:home' %}">ESuits</a>
+<a class="signup-header" href="{% url 'esuits:signup' %}">アカウント作成</a>
+<a class="login-header" href="{% url 'esuits:signup' %}">ログイン</a>
 {% endif %}
+</header>
+
 {% block content %}{% endblock %}
 </body>
 </html>
