@@ -1,0 +1,65 @@
+{% extends 'esuits/base.html' %}
+
+{% load static %}
+
+{% block title %}
+ChangeColor
+{% endblock %}
+
+{% block head %}
+<!-- BootstrapのCSS読み込み -->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- jQuery読み込み -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<!-- BootstrapのJS読み込み -->
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<main>
+  <h1>動作確認用ページ</h1>
+  <form>
+    {% csrf_token %}
+    <fieldset>
+        <div>
+            {{form.as_p}}
+        </div>
+        <div id="result">
+
+        </div>
+        <button type="button" id="tensaku">添削</button>
+    </fieldset>
+
+  </form>
+</main>
+
+<script>
+    $(function(){
+        $('#tensaku').on('click', function(){
+            let ES = $('textarea[name$=content]').val();
+            $.ajax({
+                url: "{% url 'esuits:samples:change_color_sample' %}",
+                type: "GET",
+                data: {
+                    "ES": ES,
+                }
+            }).done((data)=>{
+                let modified_ES = data['ES'];
+                src = "";
+                for (let i = 0;i < modified_ES.length;i+=1){
+                    let part = modified_ES[i]['part'];
+                    let color = modified_ES[i]['color'];
+                    if (color != "None"){
+                        src += '<span style="background-color:'+color+'">'+part+'</span>';
+                    } else {
+                        src += part;
+                    }
+                }
+                $('#result').html(src);
+            }).fail((data)=>{
+                alert('エラーが発生しました');
+            });
+        });
+    });
+</script>
+{% endblock %}
