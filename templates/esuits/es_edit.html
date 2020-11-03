@@ -1,0 +1,60 @@
+{% extends 'esuits/base.html' %}
+
+{% load static %}
+
+{% block title %}
+ES編集ページ
+{% endblock %}
+
+{% block head %}
+<!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+<main>
+
+  <h1>ES編集ページ</h1>
+  <p>ここでESの回答を作成します</p>
+
+  <p>{{ message }}</p>
+
+  <h2>企業名: {{ es_info.company }}</h2>
+  <p>選考種別: {{ es_info.event_type }}</p>
+
+  <h2>質問と回答の一覧</h2>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {{ formset_management_form }}
+
+    {% for post, form, related_posts in zipped_posts_info %}
+      <h3>{{ post.question }}</h3>
+      <p>{{ form }}</p>
+
+      <h4>関連するポスト</h4>
+      <p>----------</p>
+      {% for post in related_posts %}
+        <p>{{ post.question }}</p>
+        <p>{{ post.answer }}</p>
+        <p>----------</p>
+      {% endfor %}
+    {% endfor %}
+    <input type="submit" value="保存する">
+  </form>
+
+  <div>
+    <div>
+      <h2>企業の情報</h2>
+      <p>ワードクラウドなどをのせる</p>
+    </div>
+
+    <div>
+      <h2>ニュース一覧</h2>
+      {% for news in news_list %}
+        <p>{{ news.title }}</p>
+        <a href="{{ news.url }}">{{ news.url }}</a>
+      {% endfor %}
+    </div>
+  </div>
+
+</main>
+{% endblock %}

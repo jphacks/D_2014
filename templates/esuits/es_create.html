@@ -1,0 +1,51 @@
+{% extends 'esuits/base.html' %}
+
+{% load static %}
+
+{% block title %}
+ES作成ページ
+{% endblock %}
+
+{% block head %}
+<!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+<main>
+  <div class="contaier">
+    <h1>ES作成ページ</h1>
+    <p>ここで企業名や質問を登録します</p>
+    <form action="" method="POST">
+      {% csrf_token %}
+      <p>ES情報</p>
+      {{es_form.as_p}}
+      <p>------------------------------</p>
+      <p>ポスト</p>
+      <!-- 複数のフォームを作成するために必要 -->
+      {{ post_formset.management_form }}
+
+      {% for post_form in post_formset.forms %}
+      <!-- {{post_form}} -->
+      {{post_form.question}}
+      {% if num_tags == 0 %}
+      <div class="box">
+        <p>タグはまだありません</p>
+      </div>
+
+      {% else %}
+      <p><label for="id_tags"></label> <select size="{{num_tags}}" name="tags" id="id_tags" multiple>
+
+          {% for tag in tags %}
+          <option value="{{tag}}">{{tag.tag_name}}</option>
+          {% endfor %}
+
+        </select></p>
+      {% endif %}
+      <br>
+      {% endfor %}
+      <input type="submit" value="作成する">
+    </form>
+  </div>
+
+</main>
+{% endblock %}

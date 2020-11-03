@@ -1,0 +1,38 @@
+{% extends 'esuits/base.html' %}
+
+{% load static %}
+
+{% block title %}
+タグ作成ページ
+{% endblock %}
+
+{% block head %}
+<!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="contaier">
+        <h1>タグページ</h1>
+        <p>ここでポストに与えるためのタグを登録します</p>
+        <h2>既存タグ</h2>
+
+        {% for tag in  tags%}
+        {{tag}}
+        {% endfor %}
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <!-- 複数のフォームを作成(formset)するために必要 -->
+            {{ tag_formset.management_form }}
+
+            {% for tag_form in tag_formset.forms %}
+            <!-- {{post_form}} -->
+            {{tag_form.tag_name}}
+            {% endfor %}
+            <input type="submit" value="作成する">
+        </form>
+    </div>
+
+</main>
+{% endblock %}
