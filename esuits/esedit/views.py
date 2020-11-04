@@ -11,6 +11,7 @@ from django.db.models import Q
 
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
 from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel
+from ..esuits_utils.newsapi import newsapi
 # Create your views here.
 
 
@@ -63,7 +64,7 @@ class EsEditView(View):
                 related_posts_list = self._get_related_posts_list(request, es_group_id)
 
                 # ニュース関連 (今はダミー)
-                news_list = self._get_news_list(request, es_group_id)
+                news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報　(ワードクラウドなど)
                 company_info = self._get_company_info(request, es_group_id)

@@ -42,6 +42,7 @@ class ESGroupModel(models.Model):
                                on_delete=models.CASCADE, blank=True)
     is_editing = models.BooleanField(verbose_name='作成中', default=True)
     created_date = models.DateTimeField(verbose_name='作成日時', default=timezone.now, blank=True)
+    deadline_date = models.DateTimeField(verbose_name='提出期限', default=timezone.now, blank=True, null=True)
 
     def __str__(self):
         return str(self.pk) + '_' + self.company + '_' + self.event_type

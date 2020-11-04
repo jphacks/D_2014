@@ -7,45 +7,73 @@ ES作成ページ
 {% endblock %}
 
 {% block head %}
-<!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
 {% endblock %}
 
 {% block content %}
 <main>
-  <div class="contaier">
-    <h1>ES作成ページ</h1>
-    <p>ここで企業名や質問を登録します</p>
-    <form action="" method="POST">
-      {% csrf_token %}
-      <p>ES情報</p>
-      {{es_form.as_p}}
-      <p>------------------------------</p>
-      <p>ポスト</p>
-      <!-- 複数のフォームを作成するために必要 -->
-      {{ post_formset.management_form }}
+  	<div class="container">
+		<h1>ES作成ページ</h1>
+		<p>ここで企業名や質問を登録します</p>
+		<form action="" method="POST">
+			{% csrf_token %}
+			<p>ES情報</p>
+			{{es_form.as_p}}
+			<p>------------------------------</p>
+			<p>ポスト</p>
+			<!-- 複数のフォームを作成するために必要 -->
+			{{ post_formset.management_form }}
+			<div id="question-area">
+				{% for post_form in post_formset.forms %}
+			
+				{{post_form.question}}
+				{{post_form.answer}}
+				{% if num_tags == 0 %}
+				<div class="box">
+					<p>タグはまだありません</p>
+				</div>
 
-      {% for post_form in post_formset.forms %}
-      <!-- {{post_form}} -->
-      {{post_form.question}}
-      {% if num_tags == 0 %}
-      <div class="box">
-        <p>タグはまだありません</p>
-      </div>
+				{% else %}
+				<p><label for="id_tags"></label> <select size="{{num_tags}}" name="tags" id="id_tags" multiple>
 
-      {% else %}
-      <p><label for="id_tags"></label> <select size="{{num_tags}}" name="tags" id="id_tags" multiple>
+					{% for tag in tags %}
+						<option value="{{tag}}">{{tag.tag_name}}</option>
+					{% endfor %}
 
-          {% for tag in tags %}
-          <option value="{{tag}}">{{tag.tag_name}}</option>
-          {% endfor %}
-
-        </select></p>
-      {% endif %}
-      <br>
-      {% endfor %}
-      <input type="submit" value="作成する">
-    </form>
-  </div>
-
+					</select></p>
+				{% endif %}
+				<br>
+				{% endfor %}
+			</div>
+			
+			<button id="add" type="button" class="btn btn-primary">質問の追加</button>
+			<input type="submit" value="作成する">
+		</form>
+	</div>
 </main>
+
+<script>
+	$(function(){
+		var totalManageElement = $('input[name$=TOTAL_FORMS]');
+		var currentFileCount = parseInt(totalManageElement.val());
+		$('#add').on('click', function(){
+			alert(currentFileCount);
+			var questionElement = $('<textarea>', {
+				name: 'form-' + currentFileCount + '-question',
+				cols: '40',
+				rows: '10',
+				id: 'id_form-' + currentFileCount + '-question',
+			});
+			var answerElement = $('<textarea>', {
+				name: 'form-' + currentFileCount + '-answer',
+				cols: '40',
+				rows: '10',
+				id: 'id_form-' + currentFileCount + '-answer',
+			});
+			$('#question-area').append(questionElement);
+			$('#question-area').append(answerElement);
+			currentFileCount += 1;
+			totalManageElement.attr('value', currentFileCount);
+		});
+	});
+</script>
 {% endblock %}

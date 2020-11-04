@@ -94,4 +94,4 @@ class ESCreateView(View):
         else:
             print('failed save post_form')
 
-        return redirect('esuits:home')
+        return redirect('esuits:es_edit', es_group_id=es_group_id.pk)
