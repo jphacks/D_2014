@@ -11,6 +11,7 @@ class CreateESForm(forms.ModelForm):
             'event_type',
             'company_url',
             'is_editing',
+            'deadline_date',
             # 'author',
         )
 

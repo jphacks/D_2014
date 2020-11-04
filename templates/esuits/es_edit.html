@@ -11,6 +11,19 @@ ES編集ページ
 {% endblock %}
 
 {% block content %}
+<style>
+.scroll {
+	box-sizing: border-box;
+	overflow-y: scroll;
+	width: 300px;
+	height: 100px;
+	padding: 10px;
+	border: 1px solid #aab4b9;
+	background: #fafafa;
+	font-size: 16px;
+	transform: translateZ(0);
+}
+</style>
 <main>
 
   <h1>ES編集ページ</h1>
@@ -40,6 +53,7 @@ ES編集ページ
     {% endfor %}
     <input type="submit" value="保存する">
   </form>
+  <button></button>
 
   <div>
     <div>
@@ -49,10 +63,13 @@ ES編集ページ
 
     <div>
       <h2>ニュース一覧</h2>
-      {% for news in news_list %}
-        <p>{{ news.title }}</p>
-        <a href="{{ news.url }}">{{ news.url }}</a>
-      {% endfor %}
+        <div class="scroll">
+			{% for news in news_list %}
+				<p>{{ news.title }}</p>
+				<a href="{{ news.url }}">{{ news.url }}</a>
+			{% endfor %}
+      </div>
+      
     </div>
   </div>
 
