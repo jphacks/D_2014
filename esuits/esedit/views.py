@@ -63,7 +63,7 @@ class EsEditView(View):
                 # 関連したポスト一覧
                 related_posts_list = self._get_related_posts_list(request, es_group_id)
 
-                # ニュース関連 (今はダミー)
+                # ニュース関連
                 news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報　(ワードクラウドなど)
