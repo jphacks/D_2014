@@ -19,9 +19,10 @@
 <main>
 
   <h1>動作確認用ページ</h1>
-  <a href="{% url 'esuits:samples:newsapi_sample' %}">newsapi</a>
-
-
+  <ul>
+    <li><a href="{% url 'esuits:samples:newsapi_sample' %}">newsapi</a></li>
+    <li><a href="{% url 'esuits:samples:change_color_sample' %}">文章の一部色変え</a></li>
+  </ul>
 </main>
 {% endblock %}
 <script>

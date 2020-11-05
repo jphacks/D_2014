@@ -14,17 +14,35 @@
 <main>
 
     <h1>ホーム</h1>
-    <h1>{{username}}</h1>
-    <p>これはログイン後， 最初に表示されるページです</p>
-    <p>編集中</p>
-    {% for es in editing %}
-    <p>{{es}}</p>
-    {% endfor %}
-    <p>提出済み</p>
-    {% for es in finished %}
-    <p>{{es}}</p>
-    {% endfor %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a href="#henshuchu" class="nav-link active" data-toggle="tab">編集中</a>
+        </li>
+        <li class="nav-item">
+            <a href="#teishutuzumi" class="nav-link" data-toggle="tab">提出済</a>
+        </li>
+    </ul>
+    
 
-
+    <div class="tab-content">
+        <div id="henshuchu" class="tab-pane active">
+            <div class="overflow-auto">
+                {% for es in editing %}
+                
+                <p><a href="{% url 'esuits:es_edit' es.pk %}">{{es.company}}</a></p>
+                <p>{{es.deadline_date}}</p>
+                <p>-------------------------------</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div id="teishutuzumi" class="tab-pane">
+            <div class="overflow-auto">
+                {% for es in finished %}
+                <p>{{es}}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <a href="{% url 'esuits:es_create' %}">新規作成</a>
 </main>
 {% endblock %}
