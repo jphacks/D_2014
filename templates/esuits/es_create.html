@@ -83,10 +83,14 @@ ES作成ページ
                 {% endfor %}
               </div>
               <!-- 複数のフォームを作成するために必要 -->
-              <button id="add" type="button" class="btn btn-primary">質問の追加</button>
+              <div class="submit-wrapper">
+                <button id="add" type="button" class="btn btn-add">質問の追加</button>
+              </div>
             </div>
 
-            <input type="submit" value="作成する">
+            <div class="submit-wrapper my-4">
+              <input type="submit" class="btn btn-change-edit" value="作成する">
+            </div>
 
 
           </form>

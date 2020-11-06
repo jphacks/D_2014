@@ -21,23 +21,36 @@
   border-radius: 1em;
 }
 
-select::-ms-expand {
-  display: none;
+.btn-add {
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: #332d29;
+  color: #f7f7f7;
+  margin: 0 auto;
 }
 
-select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  margin-bottom: 20px;
-  padding: 7px 30px 7px 10px;
-  font-size: 93%;
-  line-height: 1.1em;
-  border-radius: 5px;
-  border: none;
-  background-image: url(./images/icon_arrow.svg);
-  background-repeat: no-repeat;
-  background-size: 12px 10px;
-  background-position: right 10px center;
-  background-color: #bddfff;
+.btn-add:hover {
+  background-color: #f7f7f7;
+  color: #332d29;
+  border-color: #332d29;
+}
+
+.submit-wrapper {
+  width: 20%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.btn-change-edit {
+  width: 80%;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: #332d29;
+  color: #f7f7f7;
+}
+
+.btn-change-edit:hover {
+  background-color: #f7f7f7;
+  color: #332d29;
+  border-color: #332d29;
 }
