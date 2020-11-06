@@ -12,6 +12,7 @@ from django.db.models import Q
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
 from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel
 from ..esuits_utils.newsapi import newsapi
+from ..esuits_utils.wordcloudapi.get_wordcloud import get_wordcloud
 # Create your views here.
 
 
@@ -43,7 +44,11 @@ class EsEditView(View):
 
     # 企業の情報を取得 (今は空)
     def _get_company_info(self, request, es_group_id):
-        company_info = {}
+        es_info = ESGroupModel.objects.get(pk=es_group_id)
+        company_url = es_info.company_url
+
+        wordcloud_path = get_wordcloud(company_url)
+        company_info = {"wordcloud_path":wordcloud_path[1:]}
         return company_info
 
     def get(self, request, es_group_id):

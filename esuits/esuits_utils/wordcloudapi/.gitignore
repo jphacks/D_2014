@@ -1,0 +1,12 @@
+__pycache__/
+.vscode/
+
+sample_html/
+fonts/
+
+wordclouds/
+words/
+contents/
+
+make_words.sh
+make_wordcloud.sh
