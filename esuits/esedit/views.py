@@ -8,10 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from pprint import pprint
 from django.db.models import Q
+from django.http.response import JsonResponse
 
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
 from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel
 from ..esuits_utils.newsapi import newsapi
+from ..esuits_utils.wordcloudapi.get_wordcloud import get_wordcloud
 # Create your views here.
 
 
@@ -43,7 +45,11 @@ class EsEditView(View):
 
     # 企業の情報を取得 (今は空)
     def _get_company_info(self, request, es_group_id):
-        company_info = {}
+        es_info = ESGroupModel.objects.get(pk=es_group_id)
+        company_url = es_info.company_url
+
+        wordcloud_path = get_wordcloud(company_url)
+        company_info = {"wordcloud_path":wordcloud_path[1:]}
         return company_info
 
     def get(self, request, es_group_id):
@@ -76,6 +82,7 @@ class EsEditView(View):
                     'zipped_posts_info': zip(post_set, formset, related_posts_list),
                     'news_list': news_list,
                     'company_info': company_info,
+                    'num_related_posts': len(related_posts_list)
                 }
                 return render(request, template_name, context)
             else:
@@ -112,12 +119,13 @@ class EsEditView(View):
 
                 if formset.is_valid():
                     formset.save()
+                    return redirect('esuits:home')
 
                 # 関連したポスト一覧
                 related_posts_list = self._get_related_posts_list(request, es_group_id)
 
                 # ニュース関連
-                news_list = self._get_news_list(request, es_group_id)
+                news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報　(ワードクラウドなど)
                 company_info = self._get_company_info(request, es_group_id)
@@ -147,3 +155,9 @@ class EsEditView(View):
                 'zipped_posts_info': (),
             }
             return render(request, template_name, context)
+
+def get_related_post(request):
+    pk = int(request.GET.get('pk',''))
+    es = PostModel.objects.get(pk=pk)
+    print(es.question,es.answer,sep='¥n')
+    return JsonResponse({'question':es.question, 'answer':es.answer})
