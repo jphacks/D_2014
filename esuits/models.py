@@ -29,6 +29,16 @@ class TagModel(models.Model):
         return self.tag_name
 
 
+class WordCloudModel(models.Model):
+    '''ワードクラウドを保存するデータベース'''
+
+    class Meta(object):
+        db_table = 'word_cloud'
+
+    company_url = models.URLField(verbose_name='企業ホームページ', max_length=200)
+    word_cloud_image_url = models.URLField(verbose_name='ワードクラウドURL', max_length=200)
+
+
 class ESGroupModel(models.Model):
     '''ESモデル'''
 
@@ -42,7 +52,10 @@ class ESGroupModel(models.Model):
                                on_delete=models.CASCADE, blank=True)
     is_editing = models.BooleanField(verbose_name='作成中', default=True)
     created_date = models.DateTimeField(verbose_name='作成日時', default=timezone.now, blank=True)
-    deadline_date = models.DateTimeField(verbose_name='提出期限', default=timezone.now, blank=True, null=True)
+    deadline_date = models.DateTimeField(
+        verbose_name='提出期限', default=timezone.now, blank=True, null=True)
+    # word_cloud = models.ForeignKey(WordCloudModel, verbose_name='ワードクラウド',
+    #                                on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return str(self.pk) + '_' + self.company + '_' + self.event_type

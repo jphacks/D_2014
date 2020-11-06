@@ -9,6 +9,7 @@ from .login import views as login_view
 from .signup import views as signup_view
 from .tagcreate import views as tagcreate_view
 from .logout import views as logout_view
+from django.shortcuts import redirect
 
 app_name = 'esuits'
 urlpatterns = [
@@ -16,7 +17,7 @@ urlpatterns = [
     path('login/', login_view.LoginView.as_view(), name='login'),
     path('logout/', logout_view.logoutfunc, name='logout'),
     path('signup/', signup_view.SignupView.as_view(), name='signup'),
-    path('home/', home_view.HomeView.as_view(), name='home'),
+    path('home/', views.HomeView.as_view(), name='home'),
     # esの質問を登録するページ
     path('escreate/', escreate_view.ESCreateView.as_view(), name='es_create'),
     # esを編集するページ
