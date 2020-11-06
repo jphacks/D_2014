@@ -1,12 +1,19 @@
-.form-signin {
-  width: 100%;
-  max-width: 330px;
-  padding: 15px;
-  margin: auto;
+.account-bg {
+  background: url('/static/esuits/images/index-bg.jpg') no-repeat center center;
+  background-size: cover;
+  height: 100vh;
+  min-height: 400px;
 }
 
-.form-signin .checkbox {
-  font-weight: 400;
+.form-signin {
+  position: relative;
+  top: 30%;
+  width: 100%;
+  max-width: 400px;
+  padding: 40px;
+  margin: 0 auto;
+  background-color: #f7f7f7;
+  border-radius: 20px;
 }
 
 .form-signin .form-control {
@@ -15,13 +22,28 @@
   height: auto;
   padding: 10px;
   font-size: 16px;
+  border-radius: 5px;
 }
 
 .form-signin .form-control:focus {
   z-index: 2;
 }
 
-.form-signin input[type="email"] {
+.submit-btn {
+  background-color: #332d29;
+  color: #f7f7f7;
+}
+
+.form-login:hover {
+  color: #999999;
+}
+
+.form-signin p {
+  margin: none;
+  float: left;
+}
+
+/* .form-signin input[type="email"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -31,16 +53,4 @@
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-}
-
-.account-bg {
-  /* background-image: url('/static/esuits/images/index-bg.jpg'); */
-  /* background-size: cover; */
-  background: url('/static/esuits/images/index-bg.jpg') no-repeat center center;
-  background-size: cover;
-  height: 100vh;
-  min-height: 400px;
-  /* background-attachment: fixed; */
-  /* background-position: center; */
-  /* background-repeat: no-repeat; */
-}
+} */
