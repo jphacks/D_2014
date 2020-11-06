@@ -24,7 +24,7 @@ ES作成ページ
 			{{ post_formset.management_form }}
 			<div id="question-area">
 				{% for post_form in post_formset.forms %}
-			
+
 				{{post_form.question}}
 				{{post_form.answer}}
 				{% if num_tags == 0 %}
@@ -33,18 +33,19 @@ ES作成ページ
 				</div>
 
 				{% else %}
-				<p><label for="id_tags"></label> <select size="{{num_tags}}" name="tags" id="id_tags" multiple>
+        {{ post_form.tags }}
+				<!-- <p><label for="id_tags"></label> <select size="{{num_tags}}" name="tags" id="id_tags" multiple>
 
 					{% for tag in tags %}
 						<option value="{{tag}}">{{tag.tag_name}}</option>
 					{% endfor %}
 
-					</select></p>
+					</select></p> -->
 				{% endif %}
 				<br>
 				{% endfor %}
 			</div>
-			
+
 			<button id="add" type="button" class="btn btn-primary">質問の追加</button>
 			<input type="submit" value="作成する">
 		</form>
