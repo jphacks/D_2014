@@ -46,6 +46,14 @@ class HomeView(View):
         # ログイン中のユーザpk
         login_user_id = request.user.id
 
+        # どのESのis_editingを変更するか
+        target_es_id = request.POST['target_es']
+
+        # is_editingの値を反転 (編集中 -> 提出済, 提出済 -> 編集中)
+        target_es = ESGroupModel.objects.get(pk=target_es_id)
+        target_es.is_editing = not target_es.is_editing
+        target_es.save()
+
         # テンプレート
         template = 'esuits/home.html'
 
