@@ -178,7 +178,7 @@ def get_wordcloud_path(request):
         wordcloud_path = get_wordcloud(company_url)[1:]
         print(wordcloud_path)
         # データベースに保存
-        WordCloudModel.objects.create(company_url, wordcloud_path)
+
         new_word_cloud = WordCloudModel(company_url=company_url,
                                         word_cloud_image_url=wordcloud_path)
         new_word_cloud.save()
