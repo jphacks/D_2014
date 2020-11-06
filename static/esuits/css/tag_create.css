@@ -1,0 +1,31 @@
+.form-inline {
+  position: relative;
+  width: 400px;
+  height: 200px;
+  margin: 0 auto;
+}
+
+.form-control {
+  position: relative;
+  box-sizing: border-box;
+  height: auto;
+  width: auto;
+  padding: 10px;
+  font-size: 17px;
+  border-radius: 5px;
+}
+
+.submit-btn {
+  position: relative;
+  background-color: #332d29;
+  color: #eceaec;
+  width: 100px;
+  margin: 0px;
+}
+
+.table-tags {
+  position: relative;
+  width: 30%;
+  background-color: #f7f7f7;
+  margin: 0 auto;
+}
