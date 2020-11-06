@@ -65,16 +65,16 @@ ES編集ページ
       <div>
         <h2>企業の情報</h2>
         <div>
-		  <p>ワードクラウド</p>
+		  <h3>ワードクラウド</h3>
 		  <div class="wordcloud">
-			  <p>画像を読み込み中...</p>
+			  <p>画像読み込み１分近くかかることがあります</p>
 			  <img src="https://www.kilobotics.com/img/loading.gif">
 		  </div>
         </div>
       </div>
 
       <div>
-        <h2>ニュース一覧</h2>
+        <h3>ニュース一覧</h3>
           <div class="scroll-y">
         {% for news in news_list %}
           {{ news.title }}
@@ -103,6 +103,8 @@ ES編集ページ
 		$(".wordcloud").find('img').attr('src',data["image_path"]);
 	}).fail((data)=>{
 		alert('指定されたurlではワードクラウドを生成できません');
+		$(".wordcloud").find('p').text('指定されたurlではワードクラウドを生成できません');
+		$(".wordcloud").find('img').attr('src','#');
 	});
 
 
