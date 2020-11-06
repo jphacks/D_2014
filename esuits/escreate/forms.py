@@ -27,3 +27,9 @@ class CreatePostForm(forms.ModelForm):
             'char_num',
             'es_group_id',
         )
+
+    def __init__(self, *args, user, **kwargs):
+        self.user = user
+        super().__init__(*args, **kwargs)
+        available_tags = TagModel.objects.filter(author=user)
+        self.fields['tags'].queryset = available_tags
