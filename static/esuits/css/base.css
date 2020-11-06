@@ -1,0 +1,45 @@
+body {
+   background-color: #f7f7f7;
+}
+
+a:hover {
+   text-decoration: none;
+}
+
+.navbar-color {
+   color: #f7f7f7;
+   background-color: #332d29;
+}
+
+.ESuits-header {
+   font-size: 25px;
+   color: #f7f7f7;
+}
+
+.ESuits-header:hover {
+   font-size: 25px;
+   color: #999999;
+}
+
+.ESuits-header-menu {
+   color: #f7f7f7;
+}
+
+.signup-header {
+   background-color: #f7f7f7;
+   color: #332d29;
+}
+
+.log-inout-header {
+   background-color: #332d29;
+   color: #f7f7f7;
+   border: thin solid #f7f7f7;
+}
+
+.log-inout-header:hover {
+   text-decoration: #f7f7f7;
+}
+
+.nav-link:hover {
+   color: #999999;
+}

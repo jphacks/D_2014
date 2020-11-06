@@ -1,0 +1,20 @@
+.index-top {
+  /* background-image: url('/static/esuits/images/index-bg.jpg'); */
+  /* background-size: cover; */
+  background: url('/static/esuits/images/index-bg.jpg') no-repeat center center;
+  background-size: cover;
+  height: 100vh;
+  min-height: 400px;
+  /* background-attachment: fixed; */
+  /* background-position: center; */
+  /* background-repeat: no-repeat; */
+}
+
+.jumbotron-message {
+  color: #f7f7f7;
+}
+
+.jumbotron-container {
+  position: relative;
+  top: 30%;
+}
