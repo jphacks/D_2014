@@ -22,8 +22,11 @@ class LoginView(View):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
+            # ログイン成功時
             login(request, user)
             return redirect('esuits:home')
         else:
-            return redirect('esuits:login')
+            # return redirect('esuits:login')
+            return render(request, 'esuits/login.html', {'error': 'ログインに失敗しました'})

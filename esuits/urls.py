@@ -9,6 +9,7 @@ from .login import views as login_view
 from .signup import views as signup_view
 from .tagcreate import views as tagcreate_view
 from .logout import views as logout_view
+from django.shortcuts import redirect
 
 app_name = 'esuits'
 urlpatterns = [

@@ -7,42 +7,81 @@
 {% endblock %}
 
 {% block head %}
-<!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
+<link rel="stylesheet" href="{% static 'esuits/css/home.css' %}">
 {% endblock %}
 
 {% block content %}
 <main>
+  <div class="container es-list-wrapper pt-4">
 
-    <h1>ホーム</h1>
     <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a href="#henshuchu" class="nav-link active" data-toggle="tab">編集中</a>
-        </li>
-        <li class="nav-item">
-            <a href="#teishutuzumi" class="nav-link" data-toggle="tab">提出済</a>
-        </li>
+      <li class="nav-item">
+        <a href="#henshuchu" class="nav-link active" data-toggle="tab">編集中</a>
+      </li>
+      <li class="nav-item">
+        <a href="#teishutuzumi" class="nav-link" data-toggle="tab">提出済</a>
+      </li>
     </ul>
-    
 
-    <div class="tab-content">
+    <section class="content-wrapper">
+      <div class="tab-content">
         <div id="henshuchu" class="tab-pane active">
-            <div class="overflow-auto">
-                {% for es in editing %}
-                
-                <p><a href="{% url 'esuits:es_edit' es.pk %}">{{es.company}}</a></p>
-                <p>{{es.deadline_date}}</p>
-                <p>-------------------------------</p>
-                {% endfor %}
-            </div>
+          <div class="overflow-auto">
+            <table class="table table-text">
+              <thead class="thead-lignt">
+                <tr>
+                  <th class="table-head table-company" scope="col">企業名</th>
+                  <th class="table-head table-event" scope="col">イベント</th>
+                  <th class="table-head table-date" scope="col">締切</th>
+                  <th class="table-head tabel-btn" scope="col"></th>
+                </tr>
+              </thead>
+              {% for es in editing %}
+              <tr>
+                <td class="row-company"><a href="{% url 'esuits:es_edit' es.pk %}">{{es.company}}</a></td>
+                <td>{{es.event_type}}</td>
+                <td>{{es.deadline_date|date:"Y/m/j H:i:s"}}</td>
+                <form action="" method="POST">{% csrf_token %}
+                  <input type="hidden" value="{{ es.pk }}" name="target_es">
+                  <td><button class="btn btn-sm btn-change-edit btn-block font-weight-bold" type="submit">Done</button></td>
+                </form>
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
         </div>
         <div id="teishutuzumi" class="tab-pane">
-            <div class="overflow-auto">
-                {% for es in finished %}
-                <p>{{es}}</p>
-                {% endfor %}
-            </div>
+          <div class="overflow-auto">
+            <table class="table table-text">
+              <thead class="thead-lignt">
+                <tr>
+                  <th class="table-head table-company" scope="col">企業名</th>
+                  <th class="table-head table-event" scope="col">イベント</th>
+                  <th class="table-head table-date" scope="col">締切</th>
+                  <th class="table-head tabel-btn" scope="col"></th>
+                </tr>
+              </thead>
+              {% for es in finished %}
+              <tr>
+                <td class="row-company"><a href="{% url 'esuits:es_edit' es.pk %}">{{es.company}}</a></td>
+                <td>{{es.event_type}}</td>
+                <td>{{es.deadline_date|date:"Y/m/j H:i:s"}}</td>
+                <form action="" method="POST">{% csrf_token %}
+                  <input type="hidden" value="{{ es.pk }}" name="target_es">
+                  <td><button class="btn btn-sm btn-change-edit btn-block" type="submit">編集中に戻す</button></td>
+                </form>
+              </tr>
+              {% endfor %}
+            </table>
+          </div>
         </div>
-    </div>
-    <a href="{% url 'esuits:es_create' %}">新規作成</a>
+      </div>
+    </section>
+    <!-- <a href="{% url 'esuits:es_create' %}">新規作成</a> -->
+  </div>
 </main>
+
+<script>
+  autoPadding();
+</script>
 {% endblock %}

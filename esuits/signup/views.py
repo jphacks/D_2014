@@ -26,7 +26,7 @@ class SignupView(View):
 
         # ユーザーを登録
         if CustomUserModel.objects.filter(username=username).exists():
-            return render(request, 'esuits/signup.html', {'error': 'このユーザー名  は既に登録されています．'})
+            return render(request, 'esuits/signup.html', {'error': 'このユーザー名は既に登録されています'})
         else:
             CustomUserModel.objects.create_user(username, email, password)
 
