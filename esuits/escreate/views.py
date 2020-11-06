@@ -30,7 +30,7 @@ class ESCreateView(View):
         context = {
             'es_form': CreateESForm(),
             # 'post_form': CreatePostForm(),
-            'post_formset': PostFormset(),
+            'post_formset': PostFormset(form_kwargs={'user': request.user}),
             'tags': tags,
             'num_tags': num_tags,
             'user_id': login_user_id,
@@ -82,7 +82,8 @@ class ESCreateView(View):
             form=CreatePostForm,
             extra=post_num,
         )
-        post_formset = PostFormset(request.POST)
+        post_formset = PostFormset(request.POST, form_kwargs={'user': request.user})
+
         if post_formset.is_valid():
             print('post_formset')
             print(post_formset.is_valid())
@@ -90,6 +91,7 @@ class ESCreateView(View):
             for post_form in post_forms:
                 post_form.es_group_id = es_group_id
                 post_form.save()
+            post_formset.save_m2m()
             print('saved post_form')
         else:
             print('failed save post_form')
