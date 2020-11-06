@@ -98,10 +98,9 @@ ES編集ページ
 	});
 	
     $('.page-item').on('click',function(){
-		pk = $(this).text();
+		pk = $(this).attr('name');
 		$question = $(this).parents('.related-post').find('.rel-question');
 		$answer = $(this).parents('.related-post').find('.rel-question');
-		
 		$.ajax({
 			url: "{% url 'esuits:get_related' %}",
 			type: "GET",
