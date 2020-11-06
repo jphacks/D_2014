@@ -8,6 +8,8 @@ ES編集ページ
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'esuits/css/esedit.css' %}">
+<!-- jQuery読み込み -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -58,12 +60,13 @@ ES編集ページ
         <input type="submit" value="保存する">
       </form>
     </div>
-
+    
     <div class="right col-6">
       <div>
         <h2>企業の情報</h2>
         <div>
           <p>ワードクラウドなどをのせる</p>
+          <img src="{{company_info.wordcloud_path}}">
         </div>
       </div>
 
@@ -93,9 +96,26 @@ ES編集ページ
       } else {
         $(this).text('表示する');
       }
-    });
+	});
+	
     $('.page-item').on('click',function(){
-      alert($(this).text());
+		pk = $(this).text();
+		$question = $(this).parents('.related-post').find('.rel-question');
+		$answer = $(this).parents('.related-post').find('.rel-question');
+		
+		$.ajax({
+			url: "{% url 'esuits:get_related' %}",
+			type: "GET",
+			data: {
+				"pk": pk,
+			}
+		}).done((data)=>{
+			alert(data['question']);
+			$question.text(data['question']);
+			$answer.text(data['answer']);
+		}).fail((data)=>{
+			alert('エラーが発生しました');
+		});
       
     });
   });

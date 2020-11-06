@@ -8,10 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from pprint import pprint
 from django.db.models import Q
+from django.http.response import JsonResponse
 
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
 from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel
 from ..esuits_utils.newsapi import newsapi
+from ..esuits_utils.wordcloudapi.get_wordcloud import get_wordcloud
 # Create your views here.
 
 
@@ -43,7 +45,11 @@ class EsEditView(View):
 
     # 企業の情報を取得 (今は空)
     def _get_company_info(self, request, es_group_id):
-        company_info = {}
+        es_info = ESGroupModel.objects.get(pk=es_group_id)
+        company_url = es_info.company_url
+
+        wordcloud_path = get_wordcloud(company_url)
+        company_info = {"wordcloud_path":wordcloud_path[1:]}
         return company_info
 
     def get(self, request, es_group_id):
@@ -149,3 +155,10 @@ class EsEditView(View):
                 'zipped_posts_info': (),
             }
             return render(request, template_name, context)
+
+def get_related_post(request):
+    pk = int(request.GET.get('pk',''))
+    print('*'*100,pk)
+    es = PostModel(pk=pk)
+    print(es.question,es.answer,sep='¥n')
+    return JsonResponse({'question':es.question, 'answer':es.answer})
