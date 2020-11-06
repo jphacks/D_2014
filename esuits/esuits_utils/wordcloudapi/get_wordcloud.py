@@ -37,9 +37,6 @@ def get_wordcloud(url):
     print("crawl & scrape time:", crawl_end_time - start_time, "seconds")
     print()
 
-    if contents is None:
-        return "error"
-
     # コンテンツを形態素分析し，tfidfを計算する準備をする．
     preprocess(contents, url)
     
