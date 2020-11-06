@@ -177,12 +177,15 @@ def get_wordcloud_path(request):
         wordcloud_path = WordCloudModel.objects.get(company_url=company_url).word_cloud_image_url
     # 存在しない場合は新しくワードクラウドを作成
     except WordCloudModel.DoesNotExist:
-        wordcloud_path = get_wordcloud(company_url)[1:]
-        print(wordcloud_path)
-        # データベースに保存
+        try:
+            wordcloud_path = get_wordcloud(company_url)[1:]
+            print(wordcloud_path)
+            # データベースに保存
 
-        new_word_cloud = WordCloudModel(company_url=company_url,
-                                        word_cloud_image_url=wordcloud_path)
-        new_word_cloud.save()
-        print('created new word cloud')
+            new_word_cloud = WordCloudModel(company_url=company_url,
+                                            word_cloud_image_url=wordcloud_path)
+            new_word_cloud.save()
+            print('created new word cloud')
+        except:
+            raise Exception
     return JsonResponse({'image_path': wordcloud_path})
