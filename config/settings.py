@@ -23,11 +23,7 @@ PROJECT_NAME = os.path.basename(BASE_DIR)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-
-ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com', 'esuits.herokuapp.com']
 
 
 # Application definition
@@ -150,7 +146,11 @@ LOGIN_URL = '/login/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+
+DEBUG = False
 
 try:
     from config.local_settings import *
