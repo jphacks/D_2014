@@ -51,4 +51,4 @@ class TagCreateView(View):
         else:
             print('failed save post_form')
 
-        return redirect('esuits:home')
+        return redirect('esuits:tag_create')
