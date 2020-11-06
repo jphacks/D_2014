@@ -14,7 +14,7 @@ ESuits | LogIn
 <section class="account-bg">
     <form class="form-signin" method="POST" action="">{% csrf_token %}
         {% if error %}
-        <p class="signup-error p-">{{ error }}</p>
+        <p class="signup-error">{{ error }}</p>
         {% endif %}
         <label for="inputUsername" class="sr-only">ユーザー名</label>
         <input type="text" id="inputUsername" class="form-control my-3" name="username" placeholder="ユーザー名" required
