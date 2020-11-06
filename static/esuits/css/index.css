@@ -1,0 +1,9 @@
+.index-top {
+  background-image: url('/static/esuits/images/index-bg.jpg');
+  background-size: cover;
+  height: 50vh;
+  /* min-height: 800px; */
+  /* background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat; */
+}
