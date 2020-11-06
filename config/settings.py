@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #追加のアプリ
+    # 追加のアプリ
     'esuits',
     'esuits.samples',
 ]
@@ -68,7 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'esuits.context_processors.common_context_processor', #追加
+                'esuits.context_processors.common_context_processor',  # 追加
             ],
         },
     },
@@ -128,8 +128,10 @@ PUBLIC_PATHS = [
     '/login/',
     '/admin/',
     '/signup/',
-    '',
+    r'/$',
 ]
+
+LOGIN_URL = '/'
 
 
 # Static files (CSS, JavaScript, Images)

@@ -7,18 +7,30 @@
 {% endblock %}
 
 {% block head %}
-<!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
+<link rel="stylesheet" href="{% static 'esuits/css/index.css' %}">
 {% endblock %}
 
+{% block header %}
+<!-- この部分はアプリの説明を入れる場合，変更あり -->
+<section class="jumbotron jumbotron-fluid index-top">
+  <div class="container jumbotron-container">
+    <h1 class="jumbotron-heading my-5 jumbotron-message">誰でも簡単に<br>ES作成</h1>
+    <a href="{% url 'esuits:signup' %}">
+      <button type="button" class='btn nav-link mx-2 font-weight-bold signup-header'>
+        使ってみる
+      </button>
+    </a>
+  </div>
+</section>
+{% endblock %}
 {% block content %}
-<main>
-
-  <h1>トップページ</h1>
+<!-- 
+<div class="container">
+  <h0>トップページ</h1>
   <p>これは最初に表示されるページです</p>
   <div>
     <a href="{% url 'esuits:signup' %}">使ってみる</a>
+    <a href="{% url 'esuits:samples:index' %}">サンプルページ</a>
   </div>
-
-  <a href="{% url 'esuits:samples:index' %}">サンプルページ</a>
-</main>
+</div> -->
 {% endblock %}

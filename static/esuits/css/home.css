@@ -1,0 +1,12 @@
+.nav .nav-item a {
+    color: black;
+}
+.nav .nav-item .active {
+    background-color: #f7f7f7;
+    color: black;
+    font-weight: bold;
+}
+
+.content-wrapper {
+    background-color: #f7f7f7;
+}
