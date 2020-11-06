@@ -119,12 +119,16 @@ def crawl_and_scrape(url):
     reactor.run() # クロールが終了するまでスクリプトはここでブロックされます
 
     # スクレイピング結果はoutput_pathに保存してある．
-    with open(output_path, encoding="utf-8") as f:
+    try:
+        with open(output_path, encoding="utf-8") as f:
             contents = json.load(f)
+            print("crawl end")
+            return contents
+    except:
+        # コンテンツ作成に失敗した場合
+        return None
 
-    print("crawl end")
-
-    return contents
+    
 
 
 def main():
