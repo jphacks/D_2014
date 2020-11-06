@@ -68,7 +68,7 @@ ES編集ページ
         </div>
         
       </div>
-      <button type="button" class="related-post-button">表示切り替え</button>
+      <button type="button" class="related-post-button">隠す</button>
     </div>
     {% endfor %}
     <input type="submit" value="保存する">
@@ -96,6 +96,11 @@ ES編集ページ
   $(function(){
     $('.related-post-button').on('click',function(){
       $(this).parents('.post-list').find('.related-post').toggle();
+      if($(this).parents('.post-list').find('.related-post').css('display') == 'block'){
+        $(this).text('隠す');
+      } else {
+        $(this).text('表示する');
+      }
     });
   });
 </script>
