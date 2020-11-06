@@ -64,13 +64,16 @@
       <div>
         <h2>企業の情報</h2>
         <div>
-          <p>ワードクラウドなどをのせる</p>
-          <img src="{{company_info.wordcloud_path}}">
+		  <h3>ワードクラウド</h3>
+		  <div class="wordcloud">
+			  <p>画像読み込み１分近くかかることがあります</p>
+			  <img src="https://www.kilobotics.com/img/loading.gif">
+		  </div>
         </div>
       </div>
 
       <div>
-        <h2>ニュース一覧</h2>
+        <h3>ニュース一覧</h3>
           <div class="scroll-y">
         {% for news in news_list %}
           {{ news.title }}
@@ -88,6 +91,22 @@
 </main>
 <script>
   $(function(){
+	$.ajax({
+		url: "{% url 'esuits:get_wordcloud' %}",
+		type: "GET",
+		data: {
+			"es_group_id": "{{es_group_id}}",
+		}
+	}).done((data)=>{
+		$(".wordcloud").find('p').text('');
+		$(".wordcloud").find('img').attr('src',data["image_path"]);
+	}).fail((data)=>{
+		alert('指定されたurlではワードクラウドを生成できません');
+		$(".wordcloud").find('p').text('指定されたurlではワードクラウドを生成できません');
+		$(".wordcloud").find('img').attr('src','#');
+	});
+
+
     $('.related-post-button').on('click',function(){
       $(this).parents('.post-list').find('.related-post').toggle();
       if($(this).parents('.post-list').find('.related-post').css('display') == 'block'){
