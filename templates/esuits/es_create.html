@@ -7,73 +7,162 @@ ES作成ページ
 {% endblock %}
 
 {% block head %}
+<link rel="stylesheet" href="{% static 'esuits/css/es_create.css' %}">
+<script type="text/javascript" src="{% static 'esuits/js/es_create.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 <main>
-  	<div class="container">
-		<h1>ES作成ページ</h1>
-		<p>ここで企業名や質問を登録します</p>
-		<form action="" method="POST">
-			{% csrf_token %}
-			<p>ES情報</p>
-			{{es_form.as_p}}
-			<p>------------------------------</p>
-			<p>ポスト</p>
-			<!-- 複数のフォームを作成するために必要 -->
-			{{ post_formset.management_form }}
-			<div id="question-area">
-				{% for post_form in post_formset.forms %}
-			
-				{{post_form.question}}
-				{{post_form.answer}}
-				{% if num_tags == 0 %}
-				<div class="box">
-					<p>タグはまだありません</p>
-				</div>
+  <div class="container pt-4">
 
-				{% else %}
-				<p><label for="id_tags"></label> <select size="{{num_tags}}" name="tags" id="id_tags" multiple>
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a href="#create" class="nav-link active" data-toggle="tab">ES情報登録</a>
+      </li>
+    </ul>
 
-					{% for tag in tags %}
-						<option value="{{tag}}">{{tag.tag_name}}</option>
-					{% endfor %}
+    <div class="tab-content content-wrapper">
+      <div id="create" class="tab-pane active">
+        <div class="overflow-auto">
+          <form action="" method="POST">
+            {% csrf_token %}
+            <div class="info-wrapper">
+              <div class="form-group row">
+                <label for="company" class="col-3 col-form-label">会社名</label>
+                <div class="col-9">
+                  <input type="text" class="form-control" id="company" name="company">
+                </div>
+              </div>
 
-					</select></p>
-				{% endif %}
-				<br>
-				{% endfor %}
-			</div>
-			
-			<button id="add" type="button" class="btn btn-primary">質問の追加</button>
-			<input type="submit" value="作成する">
-		</form>
-	</div>
+              <div class="form-group row">
+                <label for="event_type" class="col-3 col-form-label">選考種別</label>
+                <div class="col-9">
+                  <input type="text" class="form-control" id="event_type" name="event_type" placeholder="サマーインターン">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="company_url" class="col-3 col-form-label">採用ページ URL</label>
+                <div class="col-9">
+                  <input type="url" class="form-control" id="company_url" name="company_url">
+                </div>
+              </div>
+
+              <div class="form-group row">
+                <label for="deadline_date" class="col-3 col-form-label">締切</label>
+                <div class="col-9">
+                  <input type="datetime-local" class="form-control" id="deadline_date">
+                </div>
+              </div>
+            </div>
+
+            <div class="info-wrapper">
+              <div id="question_list">
+                {{ post_formset.management_form }}
+                {% for post_form in post_formset.forms %}
+
+                <div class="form-group row">
+                  <label for="question{{ forloop.counter }}" class="col-3 col-form-label">質問
+                    {{ forloop.counter }}</label>
+                  <div class="col-9">
+                    <input type="text" class="form-control question" name="question">
+                  </div>
+                </div>
+
+                {% if num_tags == 0 %}
+                <div class="box">
+                  <p>タグはまだありません</p>
+                </div>
+
+                {% else %}
+                <p>
+                  <label for="id_tags"></label>
+                  <select size="{{num_tags}}" name="tags" id="id_tags" multiple>
+                    {% for tag in tags %}
+                    <option value="{{tag}}">{{tag.tag_name}}</option>
+                    {% endfor %}
+                  </select>
+                </p>
+                {% endif %}
+
+                {% endfor %}
+              </div>
+              <!-- 複数のフォームを作成するために必要 -->
+              <button id="add" type="button" class="btn btn-primary">質問の追加</button>
+            </div>
+
+            <input type="submit" value="作成する">
+
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
 </main>
 
 <script>
-	$(function(){
-		var totalManageElement = $('input[name$=TOTAL_FORMS]');
-		var currentFileCount = parseInt(totalManageElement.val());
-		$('#add').on('click', function(){
-			alert(currentFileCount);
-			var questionElement = $('<textarea>', {
-				name: 'form-' + currentFileCount + '-question',
-				cols: '40',
-				rows: '10',
-				id: 'id_form-' + currentFileCount + '-question',
-			});
-			var answerElement = $('<textarea>', {
-				name: 'form-' + currentFileCount + '-answer',
-				cols: '40',
-				rows: '10',
-				id: 'id_form-' + currentFileCount + '-answer',
-			});
-			$('#question-area').append(questionElement);
-			$('#question-area').append(answerElement);
-			currentFileCount += 1;
-			totalManageElement.attr('value', currentFileCount);
-		});
-	});
+  autoPadding();
+  // getToday();
+
+  $(function () {
+    var totalManageElement = $('input[name$=TOTAL_FORMS]');
+    var currentFileCount = parseInt(totalManageElement.val());
+    console.log(currentFileCount)
+    // < div class="form-group row" >
+    //           <label for="question" class="col-3 col-form-label">質問 {{ forloop.counter }}</label>
+    //           <div class="col-9">
+    //             <input type="text" class="form-control question" name="question">
+    //           </div>
+    //         </div>
+
+    $('#add').on('click', function () {
+      var formGroup = document.createElement('div');
+      formGroup.setAttribute('class', 'form-group row');
+
+      var label = document.createElement('label');
+      label.setAttribute('for', 'question');
+      label.setAttribute('class', 'col-3 col-form-label');
+      let text = '質問 ' + (currentFileCount + 1);
+      var newText = document.createTextNode(text)
+      label.appendChild(newText);
+
+      var questionCol = document.createElement('div');
+      questionCol.setAttribute('class', 'col-9');
+      var input = document.createElement('input');
+      input.setAttribute('type', 'text');
+      input.setAttribute('class', 'form-control question');
+      input.setAttribute('name', 'question');
+      questionCol.appendChild(input);
+
+      formGroup.appendChild(label);
+      formGroup.appendChild(questionCol);
+
+      // document.getElementById('question_list').appendChild(formGroup);
+      var parent = document.getElementById('question_list');
+      var lastChild = parent.lastElementChild;
+      parent.insertBefore(formGroup, lastChild.nextSibling);
+      // .lastElementChild.insertBefore(formGroup)
+
+      // var questionElement = $('<textarea>', {
+      //   name: 'form-' + currentFileCount + '-question',
+      //   cols: '40',
+      //   rows: '10',
+      //   id: 'id_form-' + currentFileCount + '-question',
+      // });
+      // var answerElement = $('<textarea>', {
+      //   name: 'form-' + currentFileCount + '-answer',
+      //   cols: '40',
+      //   rows: '10',
+      //   id: 'id_form-' + currentFileCount + '-answer',
+      // });
+      // $('#question-area').append(questionElement);
+      // $('#question-area').append(answerElement);
+      currentFileCount += 1;
+      totalManageElement.attr('value', currentFileCount);
+    });
+  });
 </script>
 {% endblock %}

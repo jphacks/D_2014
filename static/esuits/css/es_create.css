@@ -1,0 +1,22 @@
+.nav .nav-item a {
+  color: #332d29;
+}
+
+.nav .nav-item .active {
+  background-color: #f7f7f7;
+  color: #332d29;
+  font-weight: bold;
+}
+
+.content-wrapper {
+  background-color: #f7f7f7;
+}
+
+.info-wrapper {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 3em;
+  padding: 3em;
+  border: 3px solid #332d29;
+  border-radius: 1em;
+}
