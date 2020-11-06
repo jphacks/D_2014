@@ -54,8 +54,8 @@ class ESGroupModel(models.Model):
     created_date = models.DateTimeField(verbose_name='作成日時', default=timezone.now, blank=True)
     deadline_date = models.DateTimeField(
         verbose_name='提出期限', default=timezone.now, blank=True, null=True)
-    # word_cloud = models.ForeignKey(WordCloudModel, verbose_name='ワードクラウド',
-    #                                on_delete=models.SET_NULL, null=True)
+    word_cloud = models.ForeignKey(WordCloudModel, verbose_name='ワードクラウド',
+                                   on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return str(self.pk) + '_' + self.company + '_' + self.event_type
