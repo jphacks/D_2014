@@ -55,6 +55,7 @@ class ESCreateView(View):
             # form.save()では，作成されたレコードが返ってくる．作成されたレコードのpkを取得
             es_file = es_form.save(commit=False)
             es_file.author = CustomUserModel.objects.get(pk=login_user_id)
+            es_file.is_editing = True
             es_group_id = es_form.save()
             print('saved es_form')
         else:
