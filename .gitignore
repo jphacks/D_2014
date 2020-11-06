@@ -10,4 +10,10 @@ local_settings.py
 
 venv/
 .vscode/
+<<<<<<< HEAD
 .DS_Store
+=======
+.DS_Store
+
+staticfiles
+>>>>>>> bb57b70ac5f2a28b9be04edec2dc4e9c407fd3d3
