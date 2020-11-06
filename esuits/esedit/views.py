@@ -187,5 +187,6 @@ def get_wordcloud_path(request):
             new_word_cloud.save()
             print('created new word cloud')
         except:
-            raise Exception
+            print('error from word_cloud')
+            return JsonResponse({'image_path': '/static/esuits/images/wordcloud_failed.png'})
     return JsonResponse({'image_path': wordcloud_path})
