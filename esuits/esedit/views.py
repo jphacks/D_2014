@@ -161,3 +161,8 @@ def get_related_post(request):
     es = PostModel.objects.get(pk=pk)
     print(es.question,es.answer,sep='¥n')
     return JsonResponse({'question':es.question, 'answer':es.answer})
+
+def get_wordcloud_path(request):
+    es_group_id = int(request.GET.get('es_group_id',''))
+
+    return JsonResponse({'image_path':'ここに画像のパスを入れる'})
