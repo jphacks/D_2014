@@ -28,6 +28,7 @@
     border-style: solid; /* 線種 */
     border-color: black;   /* 線色 */
     height: 1px;         /* 高さ(※古いIE用) */
+    padding: 2px;
     
 }
 
