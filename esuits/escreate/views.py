@@ -25,7 +25,7 @@ class ESCreateView(View):
         PostFormset = forms.formset_factory(
             # PostModel,
             form=CreatePostForm,
-            extra=2,
+            extra=1,
         )
         context = {
             'es_form': CreateESForm(),

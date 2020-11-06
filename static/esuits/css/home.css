@@ -1,10 +1,10 @@
 .nav .nav-item a {
-  color: black;
+  color: #332d29;
 }
 
 .nav .nav-item .active {
   background-color: #f7f7f7;
-  color: black;
+  color: #332d29;
   font-weight: bold;
 }
 
