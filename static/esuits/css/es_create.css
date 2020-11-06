@@ -1,0 +1,56 @@
+.nav .nav-item a {
+  color: #332d29;
+}
+
+.nav .nav-item .active {
+  background-color: #f7f7f7;
+  color: #332d29;
+  font-weight: bold;
+}
+
+.content-wrapper {
+  background-color: #f7f7f7;
+}
+
+.info-wrapper {
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 3em;
+  padding: 3em;
+  border: 3px solid #332d29;
+  border-radius: 1em;
+}
+
+.btn-add {
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: #332d29;
+  color: #f7f7f7;
+  margin: 0 auto;
+}
+
+.btn-add:hover {
+  background-color: #f7f7f7;
+  color: #332d29;
+  border-color: #332d29;
+}
+
+.submit-wrapper {
+  width: 20%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.btn-change-edit {
+  width: 80%;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: #332d29;
+  color: #f7f7f7;
+}
+
+.btn-change-edit:hover {
+  background-color: #f7f7f7;
+  color: #332d29;
+  border-color: #332d29;
+}
