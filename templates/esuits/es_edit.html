@@ -11,6 +11,7 @@ ES編集ページ
 {% endblock %}
 
 {% block content %}
+
 <style>
 .scroll {
 	box-sizing: border-box;
@@ -18,21 +19,63 @@ ES編集ページ
 	width: 300px;
 	height: 100px;
 	padding: 10px;
-	border: 1px solid #aab4b9;
-	background: #fafafa;
+	border: 1px solid #eceaec;
+	background: #f7f7f7;
 	font-size: 16px;
 	transform: translateZ(0);
 }
 </style>
+{% csrf_token %}
+{{ formset_management_form }}
 <main>
-
   <h1>ES編集ページ</h1>
-  <p>ここでESの回答を作成します</p>
+  <h2>企業名: {{ es_info.company }}</h2>
+  <p>選考種別: {{ es_info.event_type }}</p>
+
+  {% for post, form, related_posts in zipped_posts_info %}
+    <div class="card" style="width:30rem;">
+      <div class="card-header">
+        {{ post.question }}
+        
+      </div>
+      <div class="card-body">
+        {{ post.tags }}
+        {{ form }}
+      </div>
+    </div>
+
+    <div class="card" style="width:30rem;">
+      <div class="card-header">
+
+        <ul class="nav">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">企業一覧</a>
+            <div class="dropdown-menu">
+              {% for related_post in related_posts %}
+                <a class="dropdown-item" id="{{related_post.es_group_id}}" href="#">{{ related_post.company }}</a>
+              {% endfor %}
+          </li>
+        </ul>
+  
+      </div>
+
+      <div class="card-body">
+
+        <div class="tab-content" id="queryInRelatedPost">
+          {% for related_post in related_posts %}
+            <div class="tab-pane fade show active" id="{{related_post.es_group_id}}" role="tabpanel" aria-labelledby="home-tab">
+              {{related_post.answer}}
+            </div>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
+  {% endfor %}
 
   <!--<p>{{ message }}</p>-->
 
-  <h2>企業名: {{ es_info.company }}</h2>
-  <p>選考種別: {{ es_info.event_type }}</p>
+
 
   <h2>質問と回答の一覧</h2>
   <form action="" method="POST">
