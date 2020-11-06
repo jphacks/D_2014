@@ -65,7 +65,7 @@ class IndexView(View):
         return render(request, template_name)
 
 
-class HomeView(View):
+class HomeView(View, LoginRequiredMixin):
     '''
     ログイン後のトップページ
     ES一覧を表示
@@ -73,7 +73,7 @@ class HomeView(View):
 
     def get(self, request):
         login_username = request.user.username
-        print(login_username)
+        print('ok')
         login_user_id = request.user.id
         # print(login_user_id)
         template = 'esuits/home.html'
