@@ -39,3 +39,23 @@ class HomeView(View):
         }
 
         return render(request, template, context)
+
+    def post(self, request):
+        # ログイン中のユーザ名
+        login_username = request.user.username
+        # ログイン中のユーザpk
+        login_user_id = request.user.id
+
+        # テンプレート
+        template = 'esuits/home.html'
+
+        es_group_list = ESGroupModel.objects.filter(author=login_user_id)
+        es_group_editing_list = es_group_list.filter(is_editing=True)
+        es_group_finished_list = es_group_list.filter(is_editing=False)
+        context = {
+            'editing': es_group_editing_list,
+            'finished': es_group_finished_list,
+            'username': login_username,
+        }
+
+        return render(request, template, context)

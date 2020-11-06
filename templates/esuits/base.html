@@ -26,11 +26,12 @@
     crossorigin="anonymous"></script>
 
   <link rel="stylesheet" href="{% static 'esuits/css/base.css' %}">
+  <script type="text/javascript" src="{% static 'esuits/js/base.js' %}"></script>
   {% block head %}{% endblock %}
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg navbar-color fixed-top">
+  <nav id="header-nav" class="navbar navbar-expand-lg navbar-color fixed-top">
     <div class="container">
       <a class="ESuits-header font-weight-bold navbar-brand" href="{% url 'esuits:index' %}">ESuits</a>
 
