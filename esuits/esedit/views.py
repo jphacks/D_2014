@@ -11,7 +11,7 @@ from django.db.models import Q
 from django.http.response import JsonResponse
 
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
-from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel
+from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel, WordCloudModel
 from ..esuits_utils.newsapi import newsapi
 from ..esuits_utils.wordcloudapi.get_wordcloud import get_wordcloud
 # Create your views here.
@@ -49,7 +49,7 @@ class EsEditView(View):
         company_url = es_info.company_url
 
         wordcloud_path = get_wordcloud(company_url)
-        company_info = {"wordcloud_path":wordcloud_path[1:]}
+        company_info = {"wordcloud_path": wordcloud_path[1:]}
         return company_info
 
     def get(self, request, es_group_id):
@@ -156,13 +156,31 @@ class EsEditView(View):
             }
             return render(request, template_name, context)
 
+
 def get_related_post(request):
-    pk = int(request.GET.get('pk',''))
+    pk = int(request.GET.get('pk', ''))
     es = PostModel.objects.get(pk=pk)
-    print(es.question,es.answer,sep='¥n')
-    return JsonResponse({'question':es.question, 'answer':es.answer})
+    print(es.question, es.answer, sep='¥n')
+    return JsonResponse({'question': es.question, 'answer': es.answer})
+
 
 def get_wordcloud_path(request):
-    es_group_id = int(request.GET.get('es_group_id',''))
+    es_group_id = int(request.GET.get('es_group_id', ''))
+    es_group = ESGroupModel.objects.get(pk=es_group_id)
+    company_url = es_group.company_url
 
-    return JsonResponse({'image_path':'ここに画像のパスを入れる'})
+    # WordCloudModelにwordcloud_pathが存在している場合はその画像のパスを取り出す
+    try:
+        print(company_url + ' already exists')
+        wordcloud_path = WordCloudModel.objects.get(company_url=company_url).word_cloud_image_url
+    # 存在しない場合は新しくワードクラウドを作成
+    except WordCloudModel.DoesNotExist:
+        wordcloud_path = get_wordcloud(company_url)[1:]
+        print(wordcloud_path)
+        # データベースに保存
+        WordCloudModel.objects.create(company_url, wordcloud_path)
+        new_word_cloud = WordCloudModel(company_url=company_url,
+                                        word_cloud_image_url=wordcloud_path)
+        new_word_cloud.save()
+        print('created new word cloud')
+    return JsonResponse({'image_path': wordcloud_path})
