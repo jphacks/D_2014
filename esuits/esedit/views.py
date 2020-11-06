@@ -13,6 +13,7 @@ from django.http.response import JsonResponse
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
 from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel
 from ..esuits_utils.newsapi import newsapi
+from ..esuits_utils.wordcloudapi.get_wordcloud import get_wordcloud
 # Create your views here.
 
 
@@ -44,7 +45,11 @@ class EsEditView(View):
 
     # 企業の情報を取得 (今は空)
     def _get_company_info(self, request, es_group_id):
-        company_info = {}
+        es_info = ESGroupModel.objects.get(pk=es_group_id)
+        company_url = es_info.company_url
+
+        wordcloud_path = get_wordcloud(company_url)
+        company_info = {"wordcloud_path":wordcloud_path[1:]}
         return company_info
 
     def get(self, request, es_group_id):
@@ -68,7 +73,8 @@ class EsEditView(View):
                 news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報　(ワードクラウドなど)
-                company_info = self._get_company_info(request, es_group_id)
+                # company_info = self._get_company_info(request, es_group_id)
+                company_info = None
 
                 context = {
                     'message': 'OK',
@@ -77,6 +83,7 @@ class EsEditView(View):
                     'zipped_posts_info': zip(post_set, formset, related_posts_list),
                     'news_list': news_list,
                     'company_info': company_info,
+                    'es_group_id': es_group_id,
                     'num_related_posts': len(related_posts_list)
                 }
                 return render(request, template_name, context)
@@ -153,7 +160,12 @@ class EsEditView(View):
 
 def get_related_post(request):
     pk = int(request.GET.get('pk',''))
-    print('*'*100,pk)
-    es = PostModel(pk=pk)
+    es = PostModel.objects.get(pk=pk)
     print(es.question,es.answer,sep='¥n')
     return JsonResponse({'question':es.question, 'answer':es.answer})
+
+def get_wordcloud_path(request):
+    es_group_id = int(request.GET.get('es_group_id',''))
+    import time
+    time.sleep(10)
+    return JsonResponse({'image_path':'https://lh3.googleusercontent.com/proxy/YaXX80t1eYAoeOgK92AvGI6rz_eJeLbzcGAsOlBfTd-IPaMU7AfM7yTmpzrmnwGYLn7pDiDJG1uoguJBLxtnCm0Di6JIvFyOCbxjGn_fP8n545HX-jnq022IRwVB6Xy1d6SMIFuMGZ-6eJdW'})

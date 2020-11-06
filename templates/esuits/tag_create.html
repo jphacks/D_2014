@@ -7,32 +7,65 @@
 {% endblock %}
 
 {% block head %}
-<!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
+<link rel="stylesheet" href="{% static 'esuits/css/tag_create.css' %}">
 {% endblock %}
 
 {% block content %}
 <main>
-    <div class="contaier">
-        <h1>タグページ</h1>
-        <p>ここでポストに与えるためのタグを登録します</p>
-        <h2>既存タグ</h2>
-
-        {% for tag in  tags%}
-        {{tag}}
-        {% endfor %}
-
-        <form action="" method="POST">
-            {% csrf_token %}
-            <!-- 複数のフォームを作成(formset)するために必要 -->
-            {{ tag_formset.management_form }}
-
-            {% for tag_form in tag_formset.forms %}
-            <!-- {{post_form}} -->
-            {{tag_form.tag_name}}
-            {% endfor %}
-            <input type="submit" value="作成する">
-        </form>
+  <section class="tag-register">
+    <div class="container" style="padding-top: 50px; padding-bottom: 50px;">
+    <div class="card" style="width: 500px; padding: 0 auto;">
+      <div class="card-body">
+      <form class="form-inline" action="" 　method="POST">{% csrf_token %}
+        <div class="form-group">
+          <label for="registerNewTag" class="sr-only">タグを新規入力</label>
+          <input type="text" class="form-control form-control-lg" id="registerNewTag" style="width: 300px" placeholder="自己PR、ガクチカなど"
+            required>{{tag_form.tag_name}}
+        </div>
+        <div class="form-group" style="padding-left: 43pt">
+          <button type="submit" class="btn btn-block btn-lg submit-btn font-weight-bold" >作成</button>
+        </div>
+      </form>
+      </div>
     </div>
+  </div>
+  </section>
+  <section class="table-tags">
+    <div class="overflow-auto">
+      <table class="table table-text">
+        <thead class="thead-light">
+          <tr>
+            <th class="table-head table-tag" scope="col">タグ名</th>
+          </tr>
+        </thead>
+        {% for tag in tags %}
+        <tr>
+          <td class="row-tag">{{ tag }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </section>
+    <!--
+    {% for tag in  tags%}
+      {{tag}}
+    {% endfor %}
+    -->
+    <!-- <form action="" method="POST">
+      {% csrf_token %}-->
+      <!-- 複数のフォームを作成(formset)するために必要 -->
+      <!--
+      {% for tag_form in tag_formset.forms %}
+        {{tag_form.tag_name}}
+      {% endfor %}-->
+    <!--{{ tag_formset.management_form }} 
+      
+    </form>-->
+  </div>
 
 </main>
+
+  <script>
+    autoPadding();
+  </script>
 {% endblock %}

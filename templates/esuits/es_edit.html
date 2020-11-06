@@ -3,7 +3,6 @@
 {% load static %}
 
 {% block title %}
-ES編集ページ
 {% endblock %}
 
 {% block head %}
@@ -60,17 +59,21 @@ ES編集ページ
         <input type="submit" value="保存する">
       </form>
     </div>
-
+    
     <div class="right col-6">
       <div>
         <h2>企業の情報</h2>
         <div>
-          <p>ワードクラウドなどをのせる</p>
+		  <h3>ワードクラウド</h3>
+		  <div class="wordcloud">
+			  <p>画像読み込み１分近くかかることがあります</p>
+			  <img src="https://www.kilobotics.com/img/loading.gif">
+		  </div>
         </div>
       </div>
 
       <div>
-        <h2>ニュース一覧</h2>
+        <h3>ニュース一覧</h3>
           <div class="scroll-y">
         {% for news in news_list %}
           {{ news.title }}
@@ -88,6 +91,22 @@ ES編集ページ
 </main>
 <script>
   $(function(){
+	$.ajax({
+		url: "{% url 'esuits:get_wordcloud' %}",
+		type: "GET",
+		data: {
+			"es_group_id": "{{es_group_id}}",
+		}
+	}).done((data)=>{
+		$(".wordcloud").find('p').text('');
+		$(".wordcloud").find('img').attr('src',data["image_path"]);
+	}).fail((data)=>{
+		alert('指定されたurlではワードクラウドを生成できません');
+		$(".wordcloud").find('p').text('指定されたurlではワードクラウドを生成できません');
+		$(".wordcloud").find('img').attr('src','#');
+	});
+
+
     $('.related-post-button').on('click',function(){
       $(this).parents('.post-list').find('.related-post').toggle();
       if($(this).parents('.post-list').find('.related-post').css('display') == 'block'){
@@ -98,10 +117,9 @@ ES編集ページ
 	});
 	
     $('.page-item').on('click',function(){
-		pk = $(this).text();
+		pk = $(this).attr('name');
 		$question = $(this).parents('.related-post').find('.rel-question');
-		$answer = $(this).parents('.related-post').find('.rel-question');
-		
+		$answer = $(this).parents('.related-post').find('.rel-answer');
 		$.ajax({
 			url: "{% url 'esuits:get_related' %}",
 			type: "GET",
@@ -109,7 +127,6 @@ ES編集ページ
 				"pk": pk,
 			}
 		}).done((data)=>{
-			alert(data['question']);
 			$question.text(data['question']);
 			$answer.text(data['answer']);
 		}).fail((data)=>{
@@ -120,5 +137,4 @@ ES編集ページ
   });
   autoPadding();
 </script>
-
 {% endblock %}
