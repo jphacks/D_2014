@@ -23,7 +23,7 @@ class TagCreateView(View):
         tags = TagModel.objects.filter(author=login_user_id)
         TagFormset = forms.formset_factory(
             form=CreateTagForm,
-            extra=2,
+            extra=1,
         )
         context = {
             'tag_formset': TagFormset,
