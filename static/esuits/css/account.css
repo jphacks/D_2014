@@ -38,10 +38,13 @@
   color: #999999;
 }
 
-.form-signin p {
-  margin: none;
-  float: left;
+.signup-error {
+  color: #f7f7f7;
+  background-color: rgb(170, 29, 29);
+  border-radius: 5px;
+  text-align: center;
 }
+
 
 /* .form-signin input[type="email"] {
   margin-bottom: -1px;
