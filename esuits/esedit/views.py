@@ -76,6 +76,7 @@ class EsEditView(View):
                     'zipped_posts_info': zip(post_set, formset, related_posts_list),
                     'news_list': news_list,
                     'company_info': company_info,
+                    'num_related_posts': len(related_posts_list)
                 }
                 return render(request, template_name, context)
             else:

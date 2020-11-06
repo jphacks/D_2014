@@ -7,90 +7,82 @@ ES編集ページ
 {% endblock %}
 
 {% block head %}
-<!-- <link rel="stylesheet" href="{% static 'css/index.css' %}"> -->
+<link rel="stylesheet" href="{% static 'esuits/css/esedit.css' %}">
 {% endblock %}
 
 {% block content %}
-<style>
-.scroll-y {
-	box-sizing: border-box;
-	overflow-y: scroll;
-	width: 300px;
-	height: 100px;
-	padding: 10px;
-	border: 1px solid #aab4b9;
-	background: #fafafa;
-	font-size: 16px;
-	transform: translateZ(0);
-}
-
-.scroll-x {
-	box-sizing: border-box;
-	overflow-x: scroll;
-	width: 300px;
-	height: 100px;
-	padding: 10px;
-	border: 1px solid #aab4b9;
-	background: #fafafa;
-	font-size: 16px;
-	transform: translateZ(0);
-}
-</style>
 <main>
 
-  <h1>ES編集ページ</h1>
-  <p>ここでESの回答を作成します</p>
+  <div>
+    <h2>企業名: {{ es_info.company }}</h2>
+    <p>選考種別: {{ es_info.event_type }}</p>
+  </div>
 
-  <!--<p>{{ message }}</p>-->
+  <div class="row">
+    <div class="left col-6">
+      
 
-  <h2>企業名: {{ es_info.company }}</h2>
-  <p>選考種別: {{ es_info.event_type }}</p>
+      <h2>質問と回答の一覧</h2>
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{ formset_management_form }}
 
-  <h2>質問と回答の一覧</h2>
-  <form action="" method="POST">
-    {% csrf_token %}
-    {{ formset_management_form }}
+        {% for post, form, related_posts in zipped_posts_info %}
+        <div class="post-list">
+          <h3>{{ post.question }}</h3>
+          <p>{{ form }}</p>
 
-    {% for post, form, related_posts in zipped_posts_info %}
-    <div class="post-list">
-      <h3>{{ post.question }}</h3>
-      <p>{{ form }}</p>
+          <h4>関連するポスト</h4>
+          <div class="related-post">
+            <div class="pagenation-x">
+              {% if num_related_posts > 0 %}
+              <nav aria-label="ページ送り">
+                <ul class="pagination">
+                  {% for rel_post in related_posts %}
+                  <li class="page-item page-link" name="{{rel_post.pk}}">{{forloop.counter}}</li>
+                  {% endfor %}
+                </ul>
+              </nav>
+              <p class="rel-question">{{ related_posts.0.question }}</p>
+              <div class="sep-line"></div>
+              <p class="rel-answer">{{ related_posts.0.answer }}</p>
+              {% else %}
+              <h3>関連するポストはありません</h3>
+              {% endif %}
+            </div>
+          </div>
+          <button type="button" class="related-post-button">隠す</button>
+        </div>
+        <div class="sep-line"></div>
+        {% endfor %}
+        <input type="submit" value="保存する">
+      </form>
+    </div>
 
-      <h4>関連するポスト</h4>
-      <p>----------</p>
-      <div class="related-post">
-        <div class="scroll-x">
-          {% for post in related_posts %}
-          <p>{{ post.question }}</p>
-          <p>{{ post.answer }}</p>
-          <p>----------</p>
-          {% endfor %}
+    <div class="right col-6">
+      <div>
+        <h2>企業の情報</h2>
+        <div>
+          <p>ワードクラウドなどをのせる</p>
+        </div>
+      </div>
+
+      <div>
+        <h2>ニュース一覧</h2>
+          <div class="scroll-y">
+        {% for news in news_list %}
+          {{ news.title }}
+          <br>
+          <p><a href="{{ news.url }}">{{ news.url }}</a></p>
+          <div class="sep-line"></div>
+        {% endfor %}
         </div>
         
       </div>
-      <button type="button" class="related-post-button">隠す</button>
-    </div>
-    {% endfor %}
-    <input type="submit" value="保存する">
-  </form>
-
-  <div>
-    <div>
-      <h2>企業の情報</h2>
-      <p>ワードクラウドなどをのせる</p>
-    </div>
-
-    <div>
-      <h2>ニュース一覧</h2>
-        <div class="scroll-y">
-			{% for news in news_list %}
-				<p>{{ news.title }}</p>
-				<a href="{{ news.url }}">{{ news.url }}</a>
-			{% endfor %}
-      </div>
-      
     </div>
   </div>
+
+  
 </main>
 <script>
   $(function(){
@@ -102,7 +94,12 @@ ES編集ページ
         $(this).text('表示する');
       }
     });
+    $('.page-item').on('click',function(){
+      alert($(this).text());
+      
+    });
   });
+  autoPadding();
 </script>
 
 {% endblock %}

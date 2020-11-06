@@ -56,7 +56,6 @@ ES作成ページ
 		var totalManageElement = $('input[name$=TOTAL_FORMS]');
 		var currentFileCount = parseInt(totalManageElement.val());
 		$('#add').on('click', function(){
-			alert(currentFileCount);
 			var questionElement = $('<textarea>', {
 				name: 'form-' + currentFileCount + '-question',
 				cols: '40',
