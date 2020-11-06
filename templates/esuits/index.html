@@ -11,10 +11,11 @@
 {% endblock %}
 
 {% block header %}
+<!-- この部分はアプリの説明を入れる場合，変更あり -->
 <section class="jumbotron jumbotron-fluid index-top">
   <div class="container jumbotron-container">
     <h1 class="jumbotron-heading my-5 jumbotron-message">誰でも簡単に<br>ES作成</h1>
-    <a href="{% url 'esuits:signup' %}">
+    <a href="{% url 'esuits:home' %}">
       <button type="button" class='btn nav-link mx-2 font-weight-bold signup-header'>
         使ってみる
       </button>
@@ -22,17 +23,14 @@
   </div>
 </section>
 {% endblock %}
-
-<!-- {% block content %} -->
+{% block content %}
 <!-- 
 <div class="container">
-  <h1>トップページ</h1>
+  <h0>トップページ</h1>
   <p>これは最初に表示されるページです</p>
   <div>
     <a href="{% url 'esuits:signup' %}">使ってみる</a>
     <a href="{% url 'esuits:samples:index' %}">サンプルページ</a>
   </div>
-  </main>
 </div> -->
-
-<!-- {% endblock %} -->
+{% endblock %}

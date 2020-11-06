@@ -1,5 +1,5 @@
 body {
-   background-color: #f7f7f7;
+   background-color: #eceaec;
 }
 
 a:hover {
@@ -7,13 +7,18 @@ a:hover {
 }
 
 .navbar-color {
-   color: #f7f7f7;
+   color: #eceaec;
    background-color: #332d29;
+}
+
+.navbar-toggler .navbar-toggler-icon {
+   border-color: #eceaec;
+   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(247,247,247,1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
 }
 
 .ESuits-header {
    font-size: 25px;
-   color: #f7f7f7;
+   color: #eceaec;
 }
 
 .ESuits-header:hover {
@@ -22,22 +27,22 @@ a:hover {
 }
 
 .ESuits-header-menu {
-   color: #f7f7f7;
+   color: #eceaec;
 }
 
 .signup-header {
-   background-color: #f7f7f7;
+   background-color: #eceaec;
    color: #332d29;
 }
 
 .log-inout-header {
    background-color: #332d29;
-   color: #f7f7f7;
-   border: thin solid #f7f7f7;
+   color: #eceaec;
+   border: thin solid #eceaec;
 }
 
 .log-inout-header:hover {
-   text-decoration: #f7f7f7;
+   text-decoration: #eceaec;
 }
 
 .nav-link:hover {

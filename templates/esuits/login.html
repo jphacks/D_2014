@@ -12,39 +12,19 @@ ESuits | LogIn
 
 {% block header %}
 <section class="account-bg">
-    <div></div>
-    <form class="form-signin" method="POST" action="">{% csrf_token %}
-        <!-- <img class="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
+  <form class="form-signin" method="POST" action="">{% csrf_token %}
+    {% if error %}
+    <p class="signup-error">{{ error }}</p>
+    {% endif %}
+    <label for="inputUsername" class="sr-only">ユーザー名</label>
+    <input type="text" id="inputUsername" class="form-control my-3" name="username" placeholder="ユーザー名" required
+      autofocus>
 
-        <h1 class="h3 mb-3 font-weight-normal">ログイン</h1>
-
-
-        <!-- <label for="inputEmail" class="sr-only">メールアドレス</label>
-        <input type="text" id="inputEmail" class="form-control" name="email" placeholder="メールアドレス" required
-            autofocus> -->
-        <label for="inputUsername" class="sr-only">ユーザー名</label>
-        <input type="text" id="inputUsername" class="form-control" name="username" placeholder="ユーザー名" required
-            autofocus>
-
-        <label for="inputPassword" class="sr-only">パスワード</label>
-        <input type="password" id="inputPassword" class="form-control" name="password" placeholder="パスワード" required>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">ログイン</button>
-        <p>新規登録は<a href="{% url 'esuits:signup'%}">こちら</a>から</p>
-    </form>
+    <label for="inputPassword" class="sr-only">パスワード</label>
+    <input type="password" id="inputPassword" class="form-control my-3" name="password" placeholder="パスワード" required>
+    <button class="btn btn-lg btn-block submit-btn my-3 mt-4 font-weight-bold" type="submit">ログイン</button>
+    <p>アカウント作成は<a href="{% url 'esuits:signup' %}">こちら</a></p>
+  </form>
 </section>
 
 {% endblock %}
-
-<!-- {% block content %} -->
-<!-- 
-<div class="container">
-  <h1>トップページ</h1>
-  <p>これは最初に表示されるページです</p>
-  <div>
-    <a href="{% url 'esuits:signup' %}">使ってみる</a>
-    <a href="{% url 'esuits:samples:index' %}">サンプルページ</a>
-  </div>
-  </main>
-</div> -->
-
-<!-- {% endblock %} -->
