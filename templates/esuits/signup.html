@@ -13,12 +13,20 @@ ESuits | LogIn
 {% block header %}
 <section class="account-bg">
     <form class="form-signin" method="POST" action="">{% csrf_token %}
+        {% if error %}
+        <p class="signup-error">{{ error }}</p>
+        {% endif %}
         <label for="inputUsername" class="sr-only">ユーザー名</label>
-        <input type="text" id="inputUsername" class="form-control my-3"
-            name="username" placeholder="ユーザー名" required autofocus>
+        <input type="text" id="inputUsername" class="form-control my-3" name="username" placeholder="ユーザー名" required
+            autofocus>
+
+        <label for="inputEmail" class="sr-only">メールアドレス</label>
+        <input type="text" id="inputEmail" class="form-control my-3" name="email" placeholder="メールアドレス" required
+            autofocus>
 
         <label for="inputPassword" class="sr-only">パスワード</label>
-        <input type="password" id="inputPassword" class="form-control my-3" name="password" placeholder="パスワード" required>
+        <input type="password" id="inputPassword" class="form-control my-3" name="password" placeholder="パスワード"
+            required>
         <button class="btn btn-lg btn-block submit-btn my-3 mt-4 font-weight-bold" type="submit">アカウント作成</button>
         <p>ログインは<a href="{% url 'esuits:login'%}">こちら</a></p>
     </form>

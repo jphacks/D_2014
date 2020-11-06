@@ -141,7 +141,7 @@ PUBLIC_PATHS = [
     r'/$',
 ]
 
-LOGIN_URL = '/'
+LOGIN_URL = '/login/'
 
 
 # Static files (CSS, JavaScript, Images)

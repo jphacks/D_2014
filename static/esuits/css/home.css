@@ -1,0 +1,62 @@
+.nav .nav-item a {
+  color: black;
+}
+
+.nav .nav-item .active {
+  background-color: #f7f7f7;
+  color: black;
+  font-weight: bold;
+}
+
+.content-wrapper {
+  background-color: #f7f7f7;
+}
+
+.table-text {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.table-head {
+  border: #ececec;
+}
+
+.table-company {
+  width: 30%;
+}
+
+.row-company a {
+  color: #332d29;
+  font-size: larger;
+  font-weight: bold;
+}
+
+.row-company a:hover {
+  color: #999999;
+}
+
+.table-event {
+  width: 30%;
+}
+
+.table-date {
+  width: 25%;
+}
+
+.table-btn {
+  width: 15%;
+}
+
+.btn-change-edit {
+  width: 80%;
+  border-radius: 10px;
+  font-weight: bold;
+  background-color: #332d29;
+  color: #eceaec;
+}
+
+.btn-change-edit:hover {
+  background-color: #eceaec;
+  color: #332d29;
+  border-color: #332d29;
+}
