@@ -13,7 +13,6 @@
 {% block content %}
 <main>
 
-    <h1>ホーム</h1>
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a href="#henshuchu" class="nav-link active" data-toggle="tab">編集中</a>
@@ -45,8 +44,8 @@
                     </thead>
                     {% for es in editing %}
                       <a href="{% url 'esuits:es_edit' es.pk %}"><tr><td>{{es.company}}</td><td>{{es.deadline}}</td></tr></a>
-                    {% endfor %}>
-                  </table>
+                    {% endfor %}
+                </table>
             </div>
         </div>
     </div>
