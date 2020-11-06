@@ -158,7 +158,6 @@ class EsEditView(View):
 
 def get_related_post(request):
     pk = int(request.GET.get('pk',''))
-    print('*'*100,pk)
-    es = PostModel(pk=pk)
+    es = PostModel.objects.get(pk=pk)
     print(es.question,es.answer,sep='¥n')
     return JsonResponse({'question':es.question, 'answer':es.answer})
