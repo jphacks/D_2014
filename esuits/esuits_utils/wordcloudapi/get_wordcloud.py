@@ -1,6 +1,5 @@
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-import japanize_matplotlib
 
 from .calc_tfidf import calc_tfidf
 from .preprocess import preprocess

@@ -1,0 +1,6 @@
+wordcloud==1.8.0
+Scrapy==2.4.0
+readability-lxml==0.8.1
+Scrapy==2.4.0
+Janome==0.4.1
+lxml==4.6.1
