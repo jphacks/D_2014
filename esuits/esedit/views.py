@@ -73,7 +73,8 @@ class EsEditView(View):
                 news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報　(ワードクラウドなど)
-                company_info = self._get_company_info(request, es_group_id)
+                # company_info = self._get_company_info(request, es_group_id)
+                company_info = None
 
                 context = {
                     'message': 'OK',
@@ -82,6 +83,7 @@ class EsEditView(View):
                     'zipped_posts_info': zip(post_set, formset, related_posts_list),
                     'news_list': news_list,
                     'company_info': company_info,
+                    'es_group_id': es_group_id,
                     'num_related_posts': len(related_posts_list)
                 }
                 return render(request, template_name, context)
