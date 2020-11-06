@@ -63,7 +63,7 @@ class EsEditView(View):
                 # 関連したポスト一覧
                 related_posts_list = self._get_related_posts_list(request, es_group_id)
 
-                # ニュース関連 (今はダミー)
+                # ニュース関連
                 news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報　(ワードクラウドなど)
@@ -112,12 +112,13 @@ class EsEditView(View):
 
                 if formset.is_valid():
                     formset.save()
+                    return redirect('esuits:home')
 
                 # 関連したポスト一覧
                 related_posts_list = self._get_related_posts_list(request, es_group_id)
 
                 # ニュース関連
-                news_list = self._get_news_list(request, es_group_id)
+                news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報　(ワードクラウドなど)
                 company_info = self._get_company_info(request, es_group_id)

@@ -12,9 +12,21 @@ ES編集ページ
 
 {% block content %}
 <style>
-.scroll {
+.scroll-y {
 	box-sizing: border-box;
 	overflow-y: scroll;
+	width: 300px;
+	height: 100px;
+	padding: 10px;
+	border: 1px solid #aab4b9;
+	background: #fafafa;
+	font-size: 16px;
+	transform: translateZ(0);
+}
+
+.scroll-x {
+	box-sizing: border-box;
+	overflow-x: scroll;
 	width: 300px;
 	height: 100px;
 	padding: 10px;
@@ -40,20 +52,27 @@ ES編集ページ
     {{ formset_management_form }}
 
     {% for post, form, related_posts in zipped_posts_info %}
+    <div class="post-list">
       <h3>{{ post.question }}</h3>
       <p>{{ form }}</p>
 
       <h4>関連するポスト</h4>
       <p>----------</p>
-      {% for post in related_posts %}
-        <p>{{ post.question }}</p>
-        <p>{{ post.answer }}</p>
-        <p>----------</p>
-      {% endfor %}
+      <div class="related-post">
+        <div class="scroll-x">
+          {% for post in related_posts %}
+          <p>{{ post.question }}</p>
+          <p>{{ post.answer }}</p>
+          <p>----------</p>
+          {% endfor %}
+        </div>
+        
+      </div>
+      <button type="button" class="related-post-button">隠す</button>
+    </div>
     {% endfor %}
     <input type="submit" value="保存する">
   </form>
-  <button></button>
 
   <div>
     <div>
@@ -63,7 +82,7 @@ ES編集ページ
 
     <div>
       <h2>ニュース一覧</h2>
-        <div class="scroll">
+        <div class="scroll-y">
 			{% for news in news_list %}
 				<p>{{ news.title }}</p>
 				<a href="{{ news.url }}">{{ news.url }}</a>
@@ -72,6 +91,18 @@ ES編集ページ
       
     </div>
   </div>
-
 </main>
+<script>
+  $(function(){
+    $('.related-post-button').on('click',function(){
+      $(this).parents('.post-list').find('.related-post').toggle();
+      if($(this).parents('.post-list').find('.related-post').css('display') == 'block'){
+        $(this).text('隠す');
+      } else {
+        $(this).text('表示する');
+      }
+    });
+  });
+</script>
+
 {% endblock %}
