@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from pprint import pprint
 from django.db.models import Q
+from django.http.response import JsonResponse
 
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
 from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel
@@ -76,6 +77,7 @@ class EsEditView(View):
                     'zipped_posts_info': zip(post_set, formset, related_posts_list),
                     'news_list': news_list,
                     'company_info': company_info,
+                    'num_related_posts': len(related_posts_list)
                 }
                 return render(request, template_name, context)
             else:
@@ -148,3 +150,10 @@ class EsEditView(View):
                 'zipped_posts_info': (),
             }
             return render(request, template_name, context)
+
+def get_related_post(request):
+    pk = int(request.GET.get('pk',''))
+    print('*'*100,pk)
+    es = PostModel(pk=pk)
+    print(es.question,es.answer,sep='¥n')
+    return JsonResponse({'question':es.question, 'answer':es.answer})

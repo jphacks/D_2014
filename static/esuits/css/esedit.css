@@ -1,0 +1,44 @@
+.scroll-y {
+	box-sizing: border-box;
+	overflow-y: scroll;
+	width: 90%;
+    height: 70%;
+    max-height: 500px;
+	padding: 10px;
+	border: 1px solid #aab4b9;
+	background: #f0f0f0;
+	font-size: 16px;
+	transform: translateZ(0);
+}
+
+.pagenation-x {
+	box-sizing: border-box;
+	overflow-x: scroll;
+	width: 90%;
+	height: 300px;
+	padding: 10px;
+	border: 1px solid #aab4b9;
+	background: #f0f0f0;
+	font-size: 16px;
+	transform: translateZ(0);
+}
+
+.sep-line {
+    border-width: 1px 0px 0px 0px; /* 太さ */
+    border-style: solid; /* 線種 */
+    border-color: black;   /* 線色 */
+    height: 1px;         /* 高さ(※古いIE用) */
+    
+}
+
+.left {
+    background-color: #f0f0f0;
+}
+
+.right {
+    background-color: #f0f0f0;
+}
+
+.page-item{
+    background-color: white;
+}
