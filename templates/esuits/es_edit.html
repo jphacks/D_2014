@@ -100,7 +100,7 @@ ES編集ページ
     $('.page-item').on('click',function(){
 		pk = $(this).attr('name');
 		$question = $(this).parents('.related-post').find('.rel-question');
-		$answer = $(this).parents('.related-post').find('.rel-question');
+		$answer = $(this).parents('.related-post').find('.rel-answer');
 		$.ajax({
 			url: "{% url 'esuits:get_related' %}",
 			type: "GET",
@@ -108,7 +108,6 @@ ES編集ページ
 				"pk": pk,
 			}
 		}).done((data)=>{
-			alert(data['question']);
 			$question.text(data['question']);
 			$answer.text(data['answer']);
 		}).fail((data)=>{
@@ -119,5 +118,4 @@ ES編集ページ
   });
   autoPadding();
 </script>
-
 {% endblock %}
