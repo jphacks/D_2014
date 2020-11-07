@@ -15,7 +15,7 @@
 ### esuits 利用の流れ
 1. サービスにログインします．
 
-![IMAGE ALT TEXT HERE](/static/images/index-bg.jpg)
+![IMAGE ALT TEXT HERE](static/esuits/images/index-bg.jpg)
 
 2. 次に表示されるのはホーム画面です．ここに今まで作成したESが表示されます．
 
