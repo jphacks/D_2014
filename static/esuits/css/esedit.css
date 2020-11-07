@@ -10,6 +10,11 @@
   font-size: 16px;
   transform: translateZ(0);
   border-radius: 0.5em;
+  text-align: center;
+}
+
+.scroll-y a {
+  color: #332d29;
 }
 
 .pagenation-x {
@@ -70,13 +75,18 @@
 
 .news-url-wrapper {
   text-align: center;
-  color: #f7f7f7;
-  width: 90%;
-  word-break: break-all;
+  margin: 0 auto;
+  color: #332d29;
+  background-color: #f7f7f7;
+  border-radius: 0.2em;
+  width: 30%;
 }
 
 .news-url-wrapper a {
-  color: #f7f7f7;
+  color: #332d29;
+  background-color: #f7f7f7;
+  border-radius: 0.2em;
+  width: 30%;
 }
 
 .rel-anser {

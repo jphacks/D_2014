@@ -91,12 +91,11 @@
                 <h3>ニュース一覧</h3>
                 <div class="scroll-y">
                   {% for news in news_list %}
-                  <div class="news-title-wrapper">
-                    {{ news.title }}
-                  </div>
-                  <div class="news-url-wrapper">
-                    <a href="{{ news.url }}">{{ news.url }}</a>
-                  </div>
+                  <a href="{{ news.url }}">
+                    <div class="news-title-wrapper">
+                      {{ news.title }}
+                    </div>
+                  </a>
                   <div class="sep-line"></div>
                   {% endfor %}
                 </div>
