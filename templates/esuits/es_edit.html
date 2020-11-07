@@ -28,7 +28,7 @@
       <div id="create" class="tab-pane active">
         <div class="overflow-auto">
           <div class="row">
-            <div class="left px-4 pt-4 col-6">
+            <div class="left pl-3 pt-4 col-6">
 
 
               <h2 class="question-head">質問一覧</h2>
@@ -72,30 +72,31 @@
                   {% endfor %}
                 </ul>
                 <div class="btn-wrapper">
-                  <input type="submit" class="related-post-button value="保存する">
+                  <input type="submit" class="related-post-button value=" 保存する">
                 </div>
               </form>
             </div>
 
-            <div class="right px-4 pt-4 col-6">
-              <div>
-                <h2>企業の情報</h2>
-                <div>
-                  <h3>ワードクラウド</h3>
-                  <div class="wordcloud">
-                    <p>画像読み込み１分近くかかることがあります</p>
-                    <img src="https://www.kilobotics.com/img/loading.gif">
-                  </div>
+            <div class="right pr-3 pt-4 col-6">
+              <h2 class="campany-head">企業情報</h2>
+              <div class="wordcloud-wrapper my-4">
+                <h3>ワードクラウド</h3>
+                <div class="wordcloud">
+                  <p>画像読み込み１分近くかかることがあります</p>
+                  <img src="https://www.kilobotics.com/img/loading.gif">
                 </div>
               </div>
 
-              <div>
+              <div class="news-wrapper my-4">
                 <h3>ニュース一覧</h3>
                 <div class="scroll-y">
                   {% for news in news_list %}
-                  {{ news.title }}
-                  <br>
-                  <p><a href="{{ news.url }}">{{ news.url }}</a></p>
+                  <div class="news-title-wrapper">
+                    {{ news.title }}
+                  </div>
+                  <div class="news-url-wrapper">
+                    <a href="{{ news.url }}">{{ news.url }}</a>
+                  </div>
                   <div class="sep-line"></div>
                   {% endfor %}
                 </div>
