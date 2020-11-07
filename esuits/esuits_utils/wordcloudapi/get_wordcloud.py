@@ -5,9 +5,14 @@ from .calc_tfidf import calc_tfidf
 from .preprocess import preprocess
 from .crawl_and_scrape import crawl_and_scrape, crawl_and_scrape_instance
 
-from .util import get_wordcloud_path
+from .util import get_wordcloud_path, get_unique_id
+
+from django.conf import settings
 
 import time
+import json
+import boto3
+
 
 def tfidf2freqdoc(words_tfidf, doc_length=1000):
     """
@@ -19,7 +24,7 @@ def tfidf2freqdoc(words_tfidf, doc_length=1000):
     """
     # tfidfの和が1になるように正規化し，語数に換算する．
     tfidf_sum = sum(words_tfidf.values())
-    words_freq = {word : int(doc_length * tfidf / tfidf_sum) for word, tfidf in words_tfidf.items()}
+    words_freq = {word: int(doc_length * tfidf / tfidf_sum) for word, tfidf in words_tfidf.items()}
 
     # スペース区切りのドキュメントに変換
     freqdoc = " ".join([" ".join([word] * count) for word, count, in words_freq.items()])
@@ -44,18 +49,18 @@ def get_wordcloud(url):
 
     # コンテンツを形態素分析し，tfidfを計算する準備をする．
     preprocess(contents, url)
-    
-    keitaiso_end_time = time.time() 
+
+    keitaiso_end_time = time.time()
     print()
-    print("形態素解析 time:",keitaiso_end_time - crawl_end_time, "seconds")
+    print("形態素解析 time:", keitaiso_end_time - crawl_end_time, "seconds")
     print()
 
     # 単語ごとのtfidfを計算する．
     words_tfidf = calc_tfidf(url)
-    
+
     tfidf_end_time = time.time()
     print()
-    print("tfidf time:",tfidf_end_time - keitaiso_end_time, "seconds")
+    print("tfidf time:", tfidf_end_time - keitaiso_end_time, "seconds")
     print()
 
     # 各単語語のtfidfに比例する語数の文章を作る．
@@ -66,14 +71,21 @@ def get_wordcloud(url):
     else:
         # tf-idfを計算できなかった場合
         freqdoc = tfidf2freqdoc(words_tfidf)
-    
+
     freq_end_time = time.time()
 
     # ワードクラウドの作成
     font_path = "./static/esuits/fonts/NotoSansCJKjp-Regular.otf"
     word_cloud = WordCloud(font_path=font_path, background_color="white").generate(freqdoc)
-    
-    output_path = get_wordcloud_path(url)
+
+    if settings.DEBUG:
+        output_path = get_wordcloud_path(url)
+    else:
+        output_name = get_unique_id(url) + '.png'
+        output_path = '/tmp/' + output_name
+        bucket_name = 'esuitswordcloud'
+        s3 = boto3.resource('s3')
+        s3.Bucket(bucket_name).upload_file(output_path, output_name)
 
     from .util import get_domain
     # output_path = "./static/esuits/images/" + get_domain(url) + ".png"
@@ -90,12 +102,13 @@ def get_wordcloud(url):
 def main():
 
     url = "https://news.yahoo.co.jp/"
-    
+
     import sys
     if len(sys.argv) == 2:
         url = sys.argv[1]
 
     get_wordcloud(url)
-    
+
+
 if __name__ == "__main__":
     main()

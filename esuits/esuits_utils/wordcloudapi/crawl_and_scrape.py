@@ -1,16 +1,19 @@
+from multiprocessing import Process, Pipe
 import scrapy
 from scrapy.http import Response
 from scrapy.crawler import CrawlerProcess, CrawlerRunner
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from twisted.internet import reactor
-from .util import get_content, get_contents_path, get_domain
+from .util import get_content, get_contents_path, get_domain, get_unique_id
+
+from django.conf import settings
+
+import boto3
 
 import os
 import json
 import logging
-
-from multiprocessing import Process, Pipe
 
 
 class Page(scrapy.Item):
@@ -19,9 +22,10 @@ class Page(scrapy.Item):
     text = scrapy.Field()
     pass
 
+
 class MySpider(CrawlSpider):
     name = 'my_spider'
-    
+
     rules = (
         Rule(LinkExtractor(), callback="parse", follow=True),
     )
@@ -43,14 +47,17 @@ class MySpider(CrawlSpider):
         url = response.url
         yield Page(url=url, title=title, text=text)
 
+
 def crawl():
-       pass
+    pass
+
 
 def work(conn, url):
     contents = crawl_and_scrape(url)
     conn.send(contents)
     conn.close()
     return
+
 
 def crawl_and_scrape_instance(url):
     # 同一プロセスだと複数回クロールできないっぽいので別プロセスを作る(何か他に良い方法ありそう)
@@ -65,19 +72,26 @@ def crawl_and_scrape_instance(url):
 
     return contents
 
+
 def crawl_and_scrape(url):
     """
     入力されたurlを起点に,再帰的にページをクロールし，取得した文章コンテンツを返す．
 
     Args:
         url (str): 再帰的クロールを開始するurl．
-    
+
     Returns:
         (list): 取得したコンテンツのリスト．コンテンツは辞書形式:{"url":str, "title":str, "text":str}
     """
 
-    # output_pathはurlのドメインに一意
-    output_path = get_contents_path(url)
+    # output_pathはurlのドメインに
+    if settings.DEBUG:
+        output_path = get_contents_path(url)
+    else:
+        output_name = get_unique_id(url) + '.json'
+        output_path = '/tmp/' + output_name
+        bucket_name = 'esuitswordcloud'
+        s3 = boto3.resource('s3')
 
     # 既に当該ドメインをクロール済みの場合
     if os.path.exists(output_path):
@@ -90,19 +104,19 @@ def crawl_and_scrape(url):
 
     settings = {
         # "USER_AGENT":"",
-        "EXTENSIONS" : {
+        "EXTENSIONS": {
             #    'scrapy.extensions.telnet.TelnetConsole': None,
             'scrapy.extensions.closespider.CloseSpider': 1,
         },
-        "CLOSESPIDER_TIMEOUT" : 0,
-        "CLOSESPIDER_ITEMCOUNT" : 30,
-        "CLOSESPIDER_PAGECOUNT" : 0,
-        "CLOSESPIDER_ERRORCOUNT" : 0,
+        "CLOSESPIDER_TIMEOUT": 0,
+        "CLOSESPIDER_ITEMCOUNT": 30,
+        "CLOSESPIDER_PAGECOUNT": 0,
+        "CLOSESPIDER_ERRORCOUNT": 0,
         "CONCURRENT_REQUESTS": 16,
-        "DOWNLOAD_DELAY": 1, # リクエストの間隔
-        "DEPTH_LIMIT": 2, # 再帰の深さ上限
+        "DOWNLOAD_DELAY": 1,  # リクエストの間隔
+        "DEPTH_LIMIT": 2,  # 再帰の深さ上限
         "FEED_FORMAT": "json",
-        "FEED_URI": output_path, # 出力ファイルパス
+        "FEED_URI": output_path,  # 出力ファイルパス
         "FEED_EXPORT_ENCODING": 'utf-8',
     }
 
@@ -116,7 +130,10 @@ def crawl_and_scrape(url):
     runner:  CrawlerRunner = CrawlerRunner(settings=settings)
     d = runner.crawl(MySpider, [url])
     d.addBoth(lambda _: reactor.stop())
-    reactor.run() # クロールが終了するまでスクリプトはここでブロックされます
+    reactor.run()  # クロールが終了するまでスクリプトはここでブロックされます
+
+    if not settings.DEBUG:
+        s3.Bucket(bucket_name).upload_file(output_path, output_name)
 
     # スクレイピング結果はoutput_pathに保存してある．
     try:
@@ -124,7 +141,7 @@ def crawl_and_scrape(url):
             contents = json.load(f)
     except:
         contents = None
-        
+
     print("crawl end")
 
     return contents
@@ -134,10 +151,10 @@ def main():
     settings = {
         # "USER_AGENT":"",
         "CONCURRENT_REQUESTS": 16,
-        "DOWNLOAD_DELAY": 1, # リクエストの間隔
-        "DEPTH_LIMIT": 2, # 再帰の深さ上限
+        "DOWNLOAD_DELAY": 1,  # リクエストの間隔
+        "DEPTH_LIMIT": 2,  # 再帰の深さ上限
         "FEED_FORMAT": "json",
-        "FEED_URI": "./sample.json", # 出力ファイルパス
+        "FEED_URI": "./sample.json",  # 出力ファイルパス
         "FEED_EXPORT_ENCODING": 'utf-8',
     }
 
@@ -145,6 +162,7 @@ def main():
     process: CrawlerProcess = CrawlerProcess(settings=settings)
     process.crawl(MySpider, ["https://news.yahoo.co.jp/"])
     process.start()  # the script will block here until the crawling is finished
+
 
 if __name__ == "__main__":
     main()

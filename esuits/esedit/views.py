@@ -10,10 +10,12 @@ from pprint import pprint
 from django.db.models import Q
 from django.http.response import JsonResponse
 
+
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
 from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel, WordCloudModel
 from ..esuits_utils.newsapi import newsapi
 from ..esuits_utils.wordcloudapi.get_wordcloud import get_wordcloud
+import os
 # Create your views here.
 
 
@@ -178,7 +180,7 @@ def get_wordcloud_path(request):
     # 存在しない場合は新しくワードクラウドを作成
     except WordCloudModel.DoesNotExist:
         try:
-            wordcloud_path = get_wordcloud(company_url)[1:]
+            wordcloud_path = get_wordcloud(company_url, DEBUG)[1:]
             print(wordcloud_path)
             # データベースに保存
 
