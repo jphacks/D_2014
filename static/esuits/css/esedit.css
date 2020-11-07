@@ -2,8 +2,8 @@
 	box-sizing: border-box;
 	overflow-y: scroll;
 	width: 90%;
-    height: 70%;
-    max-height: 500px;
+	height: 70%;
+	max-height: 500px;
 	padding: 10px;
 	border: 1px solid #aab4b9;
 	background: #f0f0f0;
@@ -13,10 +13,12 @@
 
 .pagenation-x {
 	box-sizing: border-box;
+	text-align: center;
 	overflow-x: scroll;
 	width: 90%;
-	height: 300px;
-	padding: 10px;
+	margin: 1em auto;
+	height: auto;
+	padding: 0.5em;
 	border: 1px solid #aab4b9;
 	background: #f0f0f0;
 	font-size: 16px;
@@ -24,22 +26,94 @@
 }
 
 .sep-line {
-    border-width: 1px 0px 0px 0px; /* 太さ */
-    border-style: solid; /* 線種 */
-    border-color: black;   /* 線色 */
-    height: 1px;         /* 高さ(※古いIE用) */
-    padding: 2px;
-    
+	border-width: 1px 0px 0px 0px;
+	/* 太さ */
+	border-style: solid;
+	/* 線種 */
+	border-color: black;
+	/* 線色 */
+	height: 1px;
+	/* 高さ(※古いIE用) */
+	padding: 0.5em;
+}
+
+.related-post {
+	display: none;
+}
+
+.btn-wrapper {
+	text-align: right;
+}
+
+.related-post-button {
+	width: 9em;
+	background-color: #332d29;
+	border-radius: 5px;
+	color: #f7f7f7;
+}
+
+.related-post-button:hover {
+	background-color: #f7f7f7;
+	color: #332d29;
+}
+
+.related-post-nav {
+	text-align: center;
+}
+
+.rel-anser {
+	padding-top: 0.5em;
 }
 
 .left {
-    background-color: #f0f0f0;
+	background-color: #f7f7f7;
 }
 
 .right {
-    background-color: #f0f0f0;
+	background-color: #f7f7f7;
 }
 
-.page-item{
-    background-color: white;
+.page-item {
+	background-color: white;
+}
+
+.company-wrapper {
+	background-color: #332d29;
+	border: 2px solid #332d29;
+	border-radius: 10px;
+}
+
+.nav .nav-item a {
+	color: #332d29;
+}
+
+.nav .nav-item {
+	background-color: #f7f7f7;
+	color: #332d29;
+	border: 2px 2px 2px 0;
+}
+
+.nav .nav-item .active {
+	background-color: #f7f7f7;
+	color: #332d29;
+	font-weight: bold;
+}
+
+ul {
+	list-style: none;
+}
+
+.question-head {
+	font-size: x-large;
+	margin-left: 1em;
+}
+
+.ques-textarea h3 {
+	font-size: larger;
+}
+
+.ques-textarea textarea {
+	width: 100%;
+	margin: 0 auto;
+	height: 5em;
 }
