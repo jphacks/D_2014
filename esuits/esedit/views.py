@@ -8,10 +8,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from pprint import pprint
 from django.db.models import Q
+from django.http.response import JsonResponse
 
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
-from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel
+from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel, WordCloudModel
 from ..esuits_utils.newsapi import newsapi
+from ..esuits_utils.wordcloudapi.get_wordcloud import get_wordcloud
 # Create your views here.
 
 
@@ -43,7 +45,11 @@ class EsEditView(View):
 
     # 企業の情報を取得 (今は空)
     def _get_company_info(self, request, es_group_id):
-        company_info = {}
+        es_info = ESGroupModel.objects.get(pk=es_group_id)
+        company_url = es_info.company_url
+
+        wordcloud_path = get_wordcloud(company_url)
+        company_info = {"wordcloud_path": wordcloud_path[1:]}
         return company_info
 
     def get(self, request, es_group_id):
@@ -67,7 +73,8 @@ class EsEditView(View):
                 news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報　(ワードクラウドなど)
-                company_info = self._get_company_info(request, es_group_id)
+                # company_info = self._get_company_info(request, es_group_id)
+                company_info = None
 
                 context = {
                     'message': 'OK',
@@ -76,6 +83,7 @@ class EsEditView(View):
                     'zipped_posts_info': zip(post_set, formset, related_posts_list),
                     'news_list': news_list,
                     'company_info': company_info,
+                    'es_group_id': es_group_id,
                     'num_related_posts': len(related_posts_list)
                 }
                 return render(request, template_name, context)
@@ -149,3 +157,36 @@ class EsEditView(View):
                 'zipped_posts_info': (),
             }
             return render(request, template_name, context)
+
+
+def get_related_post(request):
+    pk = int(request.GET.get('pk', ''))
+    es = PostModel.objects.get(pk=pk)
+    print(es.question, es.answer, sep='¥n')
+    return JsonResponse({'question': es.question, 'answer': es.answer})
+
+
+def get_wordcloud_path(request):
+    es_group_id = int(request.GET.get('es_group_id', ''))
+    es_group = ESGroupModel.objects.get(pk=es_group_id)
+    company_url = es_group.company_url
+
+    # WordCloudModelにwordcloud_pathが存在している場合はその画像のパスを取り出す
+    try:
+        print(company_url + ' already exists')
+        wordcloud_path = WordCloudModel.objects.get(company_url=company_url).word_cloud_image_url
+    # 存在しない場合は新しくワードクラウドを作成
+    except WordCloudModel.DoesNotExist:
+        try:
+            wordcloud_path = get_wordcloud(company_url)[1:]
+            print(wordcloud_path)
+            # データベースに保存
+
+            new_word_cloud = WordCloudModel(company_url=company_url,
+                                            word_cloud_image_url=wordcloud_path)
+            new_word_cloud.save()
+            print('created new word cloud')
+        except:
+            print('error from word_cloud')
+            return JsonResponse({'image_path': '/static/esuits/images/wordcloud_failed.png'})
+    return JsonResponse({'image_path': wordcloud_path})

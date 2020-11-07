@@ -3,103 +3,157 @@
 {% load static %}
 
 {% block title %}
-ES編集ページ
 {% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'esuits/css/esedit.css' %}">
+<!-- jQuery読み込み -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 {% endblock %}
 
 {% block content %}
 <main>
+  <div class="container pt-4">
 
-  <div>
-    <h2>企業名: {{ es_info.company }}</h2>
-    <p>選考種別: {{ es_info.event_type }}</p>
-  </div>
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a href="#edit" class="nav-link active" data-toggle="tab">{{ es_info.company }}</a>
+      </li>
+      <li class="nav-item">
+        <a href="#event" class="nav-link disable" data-toggle="tab">{{ es_info.event_type }}</a>
+      </li>
+    </ul>
 
-  <div class="row">
-    <div class="left col-6">
-      
+    <div class="tab-content content-wrapper">
+      <div id="create" class="tab-pane active">
+        <div class="overflow-auto">
+          <div class="row">
+            <div class="left pl-3 pt-4 col-6">
 
-      <h2>質問と回答の一覧</h2>
-      <form action="" method="POST">
-        {% csrf_token %}
-        {{ formset_management_form }}
 
-        {% for post, form, related_posts in zipped_posts_info %}
-        <div class="post-list">
-          <h3>{{ post.question }}</h3>
-          <p>{{ form }}</p>
+              <h2 class="question-head">質問一覧</h2>
+              <form action="" method="POST">
+                {% csrf_token %}
+                {{ formset_management_form }}
 
-          <h4>関連するポスト</h4>
-          <div class="related-post">
-            <div class="pagenation-x">
-              {% if num_related_posts > 0 %}
-              <nav aria-label="ページ送り">
-                <ul class="pagination">
-                  {% for rel_post in related_posts %}
-                  <li class="page-item page-link" name="{{rel_post.pk}}">{{forloop.counter}}</li>
+                <ul>
+                  {% for post, form, related_posts in zipped_posts_info %}
+                  <div class="post-list my-4">
+                    <li class="ques-textarea">
+                      <h3>{{ post.question }}</h3>
+                      {{ form }}
+                    </li>
+
+                    <div class="btn-wrapper">
+                      <button type="button" class="related-post-button">関連質問を表示</button>
+                    </div>
+                    <div class="related-post">
+                      <div class="pagenation-x">
+                        {% if num_related_posts > 0 %}
+                        <div class="related-post-nav">
+                        </div>
+                        <p class="rel-question">{{ related_posts.0.question }}</p>
+                        <div class="sep-line"></div>
+                        <p class="rel-answer">{{ related_posts.0.answer }}</p>
+                        <nav aria-label="ページ送り">
+                          <ul class="pagination">
+                            {% for rel_post in related_posts %}
+                            <li class="page-item page-link" name="{{rel_post.pk}}">{{forloop.counter}}</li>
+                            {% endfor %}
+                          </ul>
+                        </nav>
+                        {% else %}
+                        <h3>関連するポストはありません</h3>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div class="sep-line"></div>
                   {% endfor %}
                 </ul>
-              </nav>
-              <p class="rel-question">{{ related_posts.0.question }}</p>
-              <div class="sep-line"></div>
-              <p class="rel-answer">{{ related_posts.0.answer }}</p>
-              {% else %}
-              <h3>関連するポストはありません</h3>
-              {% endif %}
+                <div class="btn-wrapper">
+                  <input type="submit" class="related-post-button value=" 保存する">
+                </div>
+              </form>
+            </div>
+
+            <div class="right pr-3 pt-4 col-6">
+              <h2 class="campany-head">企業情報</h2>
+              <div class="wordcloud-wrapper my-4">
+                <h3>ワードクラウド</h3>
+                <div class="wordcloud">
+                  <p>画像読み込み１分近くかかることがあります</p>
+                  <img src="https://www.kilobotics.com/img/loading.gif">
+                </div>
+              </div>
+
+              <div class="news-wrapper my-4">
+                <h3>ニュース一覧</h3>
+                <div class="scroll-y">
+                  {% for news in news_list %}
+                  <a href="{{ news.url }}">
+                    <div class="news-title-wrapper">
+                      {{ news.title }}
+                    </div>
+                  </a>
+                  <div class="sep-line"></div>
+                  {% endfor %}
+                </div>
+
+              </div>
             </div>
           </div>
-          <button type="button" class="related-post-button">隠す</button>
         </div>
-        <div class="sep-line"></div>
-        {% endfor %}
-        <input type="submit" value="保存する">
-      </form>
-    </div>
-
-    <div class="right col-6">
-      <div>
-        <h2>企業の情報</h2>
-        <div>
-          <p>ワードクラウドなどをのせる</p>
-        </div>
-      </div>
-
-      <div>
-        <h2>ニュース一覧</h2>
-          <div class="scroll-y">
-        {% for news in news_list %}
-          {{ news.title }}
-          <br>
-          <p><a href="{{ news.url }}">{{ news.url }}</a></p>
-          <div class="sep-line"></div>
-        {% endfor %}
-        </div>
-        
       </div>
     </div>
   </div>
-
-  
 </main>
 <script>
-  $(function(){
-    $('.related-post-button').on('click',function(){
+  $(function () {
+    $.ajax({
+      url: "{% url 'esuits:get_wordcloud' %}",
+      type: "GET",
+      data: {
+        "es_group_id": "{{es_group_id}}",
+      }
+    }).done((data) => {
+      $(".wordcloud").find('p').text('');
+      $(".wordcloud").find('img').attr('src', data["image_path"]);
+    }).fail((data) => {
+      alert('指定されたurlではワードクラウドを生成できません');
+      $(".wordcloud").find('p').text('指定されたurlではワードクラウドを生成できません');
+      $(".wordcloud").find('img').attr('src', '#');
+    });
+
+
+    $('.related-post-button').on('click', function () {
       $(this).parents('.post-list').find('.related-post').toggle();
-      if($(this).parents('.post-list').find('.related-post').css('display') == 'block'){
-        $(this).text('隠す');
+      if ($(this).parents('.post-list').find('.related-post').css('display') == 'block') {
+        $(this).text('関連質問を閉じる');
       } else {
-        $(this).text('表示する');
+        $(this).text('関連質問を表示');
       }
     });
-    $('.page-item').on('click',function(){
-      alert($(this).text());
-      
+
+    $('.page-item').on('click', function () {
+      pk = $(this).attr('name');
+      $question = $(this).parents('.related-post').find('.rel-question');
+      $answer = $(this).parents('.related-post').find('.rel-answer');
+      $.ajax({
+        url: "{% url 'esuits:get_related' %}",
+        type: "GET",
+        data: {
+          "pk": pk,
+        }
+      }).done((data) => {
+        $question.text(data['question']);
+        $answer.text(data['answer']);
+      }).fail((data) => {
+        alert('エラーが発生しました');
+      });
+
     });
   });
   autoPadding();
 </script>
-
 {% endblock %}

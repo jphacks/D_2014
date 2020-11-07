@@ -22,6 +22,8 @@ urlpatterns = [
     path('escreate/', escreate_view.ESCreateView.as_view(), name='es_create'),
     # esを編集するページ
     path('es_edit/<int:es_group_id>', esedit_view.EsEditView.as_view(), name='es_edit'),
+    path('get_related/', esedit_view.get_related_post, name='get_related'),
+    path('get_wordcloud/', esedit_view.get_wordcloud_path, name='get_wordcloud'),
 
     # 新規作成ページ
     path('shinkiSakusei/', shinkisakusei_view.SinkiSakuseiView.as_view(), name='shinkiSakusei'),

@@ -1,0 +1,19 @@
+.submit-btn {
+  position: relative;
+  background-color: #332d29;
+  color: #eceaec;
+  width: 100px;
+  margin: 0 auto;
+}
+
+.table-tags {
+  position: relative;
+  width: 500px;
+  background-color: #f7f7f7;
+  margin: 0 auto;
+}
+
+.card {
+  background: #f7f7f7;
+  margin: 0 auto;
+}

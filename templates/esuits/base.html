@@ -15,9 +15,9 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <!-- BootstrapのJS読み込み -->
   <!-- <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+  <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
     integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
     integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
     crossorigin="anonymous"></script>
@@ -45,6 +45,9 @@
           {% if is_authenticated %}
           <li class="nav-item">
             <a class="nav-link ESuits-header-menu" href="{% url 'esuits:es_create' %}">新規作成</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link ESuits-header-menu" href="{% url 'esuits:tag_create' %}">タグ作成</a>
           </li>
           <li class="nav-item">
             <a class="nav-link ESuits-header-menu" href="{% url 'esuits:home' %}">ES一覧</a>

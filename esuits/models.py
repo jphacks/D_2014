@@ -68,7 +68,7 @@ class PostModel(models.Model):
         db_table = 'post_table'
 
     question = models.TextField(verbose_name='質問')
-    answer = models.TextField(verbose_name='回答', blank=True, null=True)
+    answer = models.TextField(verbose_name='', blank=True, null=True)
     # create_date = models.DateTimeField(verbose_name='作成日時', default=timezone.now)
     tags = models.ManyToManyField(TagModel, verbose_name='タグ名', blank=True)
 
