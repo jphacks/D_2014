@@ -1,6 +1,6 @@
 # ESuits
 
-[![IMAGE ALT TEXT HERE](https://jphacks.com/wp-content/uploads/2020/09/JPHACKS2020_ogp.jpg)](https://www.youtube.com/watch?v=G5rULR53uMk)
+![IMAGE ALT TEXT HERE](static/esuits/images/logo.png)
 
 ## 製品概要
 エントリーシート X Tech
@@ -25,13 +25,13 @@
 
 
 ### 特長
-####1. 特長1
+1. 特長1
 過去に自分が書いた回答を参考にして効率よくESを作ろう！
 
-####2. 特長2
+2. 特長2
 志望企業に関するニュースを見て，業界のトレンドや時事問題に詳しくなれる！
 
-####3. 特長3
+3. 特長3
 志望企業のウェブサイトから生成したワードクラウドを見て，エントリーシートに含めたいキーワードが一目でわかる！
 
 
