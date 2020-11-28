@@ -224,7 +224,7 @@ class EsEditView(View):
                 # ニュース関連 (今はダミー)
                 news_list = self._get_news_list(request, es_group_id)
 
-                # 企業の情報　(ワードクラウドなど)
+                # 企業の情報(ワードクラウドなど)
                 company_info = self._get_company_info(request, es_group_id)
 
                 context = {
