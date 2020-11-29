@@ -9,6 +9,7 @@ from .signup import views as signup_view
 from .tagcreate import views as tagcreate_view
 from .logout import views as logout_view
 from .views import DammyView as dv
+from .escreate import views as escreate_view
 
 
 app_name = 'esuits'
@@ -19,7 +20,8 @@ urlpatterns = [
     path('signup/', signup_view.SignupView.as_view(), name='signup'),
     path('home/', home_view.HomeView.as_view(), name='home'),
     # esの質問を登録するページ
-    path('escreate/', dv.as_view(), name='es_create'),
+    path('escreate/', escreate_view.ESCreateView.as_view(), name='es_create'),
+    # path('escreate/', dv.as_view(), name='es_create'),
     # esを編集するページ
     path('esedit/<int:es_group_id>', dv.as_view(), name='es_edit'),
     # path('get_related/', esedit_view.get_related_post, name='get_related'),

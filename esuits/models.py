@@ -50,7 +50,8 @@ class CompanyHomepageURLModel(models.Model):
 
     company = models.ForeignKey(CompanyModel, verbose_name='企業', on_delete=models.CASCADE)
     homepage_url = models.URLField(verbose_name='企業URL', max_length=200)
-    word_cloud_path = models.CharField(verbose_name='ワードクラウドパス', max_length=255)
+    word_cloud_path = models.CharField(verbose_name='ワードクラウドパス', max_length=255
+                                        , default='dummy_path', blank=True)
 
     def __str__(self):
         return self.homepage_url
@@ -98,8 +99,8 @@ class QuestionModel(models.Model):
         ('public', '公開'),
         ('private', '非公開')
     ]
-    open_info = models.CharField(verbose_name='公開or非公開', max_length=20,
-                                 choices=OPEN_INFO_CHOICES, default='private')
+    is_open = models.CharField(verbose_name='公開or非公開', max_length=20,
+                                 choices=OPEN_INFO_CHOICES, default='private', blank=True)
 
     def __str__(self):
         return self.question

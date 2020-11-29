@@ -42,17 +42,17 @@ ES作成ページ
               </div>
 
               <div class="form-group row">
-                <label for="event_type" class="col-3 col-form-label">選考種別</label>
+                <label for="selection_type" class="col-3 col-form-label">選考種別</label>
                 <div class="col-9">
-                  <input type="text" class="form-control" id="event_type" name="event_type" placeholder="サマーインターン"
+                  <input type="text" class="form-control" id="selection_type" name="selection_type" placeholder="本選考"
                     required>
                 </div>
               </div>
 
               <div class="form-group row">
-                <label for="company_url" class="col-3 col-form-label">採用ページ URL</label>
+                <label for="homepage_url" class="col-3 col-form-label">採用ページ URL</label>
                 <div class="col-9">
-                  <input type="url" class="form-control" id="company_url" name="company_url" required>
+                  <input type="url" class="form-control" id="homepage_url" name="homepage_url" required>
                 </div>
               </div>
 
@@ -66,8 +66,8 @@ ES作成ページ
 
             <div class="info-wrapper">
               <div id="question_list">
-                {{ post_formset.management_form }}
-                {% for post_form in post_formset.forms %}
+                {{ question_formset.management_form }}
+                {% for question_form in question_formset.forms %}
 
                 <div class="form-group row">
                   <label for="form-{{ forloop.counter0 }}-question" class="col-0 col-form-label"></label>
@@ -76,7 +76,7 @@ ES作成ページ
                       name="form-{{ forloop.counter0 }}-question" placeholder="学生時代に頑張ったことは？">
                   </div>
                   <div class="tags col-sm-4">
-                    {{ post_form.tags }}
+                    {{ question_form.tags }}
                   </div>
                 </div>
 
