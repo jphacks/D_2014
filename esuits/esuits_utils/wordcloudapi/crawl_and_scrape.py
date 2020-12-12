@@ -109,6 +109,7 @@ def crawl_and_scrape(url):
     print("crawl start")
 
     # クローリング実行
+    # ここで時間がかかる
     # process: CrawlerProcess = CrawlerProcess(settings=settings)
     # process.crawl(MySpider, [url])
     # process.start()  # the script will block here until the crawling is finished

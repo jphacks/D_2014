@@ -101,6 +101,6 @@ class ESCreateView(View):
             print('saved post_form')
         else:
             print('failed save post_form')
-
-        return redirect('esuits:es_edit', entry_sheet=es_record.pk)
+        print(es_record.pk)
+        return redirect('esuits:es_edit', es_id=es_record.pk)
         # return redirect('esuits:home')

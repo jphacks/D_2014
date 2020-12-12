@@ -77,9 +77,9 @@ class EntrySheetesModel(models.Model):
 
     def __str__(self):
         if self.selection_type is None:
-            return self.company.company_name + '_none'
+            return str(self.pk) + '_' + self.company.company_name + '_none'
         else:
-            return self.company.company_name + '_' + self.selection_type
+            return str(self.pk) + '_' + self.company.company_name + '_' + self.selection_type
 
 
 class QuestionModel(models.Model):
