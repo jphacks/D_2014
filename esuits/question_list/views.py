@@ -11,16 +11,12 @@ class QuestionListView(View):
     
     def get(self, request):
         login_user = request.user
-        print(type(login_user))
-        print(login_user)
-        print(login_user.pk)
         login_user_name = login_user.username
 
         # テンプレート
         template = 'esuits/question_list.html'
 
         questions = QuestionModel.objects.filter(entry_sheet__author=login_user)
-        print(questions)
         context = {
             'username': login_user_name,
             'questions': questions
