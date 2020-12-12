@@ -94,7 +94,7 @@ def crawl_and_scrape(url):
             #    'scrapy.extensions.telnet.TelnetConsole': None,
             'scrapy.extensions.closespider.CloseSpider': 1,
         },
-        "CLOSESPIDER_TIMEOUT" : 0,
+        "CLOSESPIDER_TIMEOUT": 0,
         "CLOSESPIDER_ITEMCOUNT" : 30,
         "CLOSESPIDER_PAGECOUNT" : 0,
         "CLOSESPIDER_ERRORCOUNT" : 0,
