@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView, edit
 from django import forms
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -41,22 +41,23 @@ class EsEditView(View):
     # 企業の情報を取得 (今は空)
     def _get_company_info(self, request, es_id):
         es_info = EntrySheetesModel.objects.get(pk=es_id)
-        company_url = CompanyHomepageURLModel.objects.get(pk = es_info.homepage_url)
+        company_url_info = CompanyHomepageURLModel.objects.get(company=es_info.company)
+        company_url = company_url_info.homepage_url
         print('company_url')
+        print(type(company_url))
         print(company_url)
 
         wordcloud_path = get_wordcloud(company_url)
+        print(wordcloud_path)
         company_info = {"wordcloud_path": wordcloud_path[1:]}
         return company_info
 
     def get(self, request, es_id):
         template_name = 'esuits/es_edit.html'
-
+        print('start get es edit')
         if EntrySheetesModel.objects.filter(pk=es_id).exists():
             # ESの存在を確認
             es_info = EntrySheetesModel.objects.get(pk=es_id)
-            print('es_info.author.pk: ' + str(es_info.author.pk))
-            print('request.user.pk: ' + str(request.user.pk))
 
             if (es_info.author == request.user):
                 # 指定されたESが存在し，それが自分のESの場合
@@ -70,8 +71,9 @@ class EsEditView(View):
                 news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報(ワードクラウドなど)
-                # company_info = self._get_company_info(request, es_group_id)
-                company_info = None
+                print('企業情報の取得を開始')
+                company_info = self._get_company_info(request, es_id)
+                # company_info = None
 
                 context = {
                     'message': 'OK',
@@ -165,15 +167,18 @@ def get_related_post(request):
 
 
 def get_wordcloud_path(request):
+    print('get_wordcloud_pathを開始')
     print(request.GET.get('es_group_id', ''))
-    es_group_id = request.GET.get('es_group_id', '')
-    es_group = EntrySheetesModel.objects.get(pk=es_group_id)
-    company_url = CompanyHomepageURLModel.objects.get(pk=es_group.homepage_url)
+    es_id = request.GET.get('es_group_id', '')
+    es_info = EntrySheetesModel.objects.get(pk=es_id)
+    company_url_info = CompanyHomepageURLModel.objects.get(company=es_info.company)
+    company_url = company_url_info.homepage_url
 
     # CompanyHomepageURLModelにwordcloud_pathが存在している場合はその画像のパスを取り出す
     try:
         print(company_url + ' already exists')
         wordcloud_path = CompanyHomepageURLModel.objects.get(homepage_url=company_url).word_cloud_path
+
     # 存在しない場合は新しくワードクラウドを作成
     except CompanyHomepageURLModel.DoesNotExist:
         try:
@@ -181,13 +186,15 @@ def get_wordcloud_path(request):
             print(wordcloud_path)
             # データベースに保存
 
-            new_word_cloud = CompanyHomepageURLModel(homepage_url=company_url,
-                                            word_cloud_path=wordcloud_path)
+            new_word_cloud = CompanyHomepageURLModel(company=es_info.company, 
+                    homepage_url=company_url, word_cloud_path=wordcloud_path)
             new_word_cloud.save()
             print('created new word cloud')
         except:
             print('error from word_cloud')
             return JsonResponse({'image_path': '/static/esuits/images/wordcloud_failed.png'})
+
+    # return JsonResponse({'image_path': wordcloud_path})
     homepage_url_record = CompanyHomepageURLModel.objects.get(homepage_url=company_url)
     wordcloud_path = homepage_url_record.word_cloud_path
     if wordcloud_path is None or wordcloud_path == 'dummy_path':
