@@ -51,7 +51,7 @@ class CompanyHomepageURLModel(models.Model):
     company = models.ForeignKey(CompanyModel, verbose_name='企業', on_delete=models.CASCADE)
     homepage_url = models.URLField(verbose_name='企業URL', max_length=200)
     word_cloud_path = models.CharField(verbose_name='ワードクラウドパス', max_length=255
-                                        , default='dummy_path', blank=True)
+                                        , null=True, blank=True)
 
     def __str__(self):
         return self.homepage_url

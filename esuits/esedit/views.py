@@ -18,9 +18,9 @@ class EsEditView(View):
     '''
 
     # 過去に投稿したポストのうち関連するものを取得
-    def _get_related_posts_list(self, request, es_group_id):
-        post_set = QuestionModel.objects.filter(es_group_id=es_group_id)
-        all_posts_by_login_user = QuestionModel.objects.filter(es_group_id__author=request.user)
+    def _get_related_posts_list(self, request, es_id):
+        post_set = QuestionModel.objects.filter(entry_sheet=es_id)
+        all_posts_by_login_user = QuestionModel.objects.filter(entry_sheet__author=request.user)
 
         related_posts_list = [
             all_posts_by_login_user
@@ -39,30 +39,32 @@ class EsEditView(View):
         return news_list
 
     # 企業の情報を取得 (今は空)
-    def _get_company_info(self, request, es_group_id):
-        es_info = EntrySheetesModel.objects.get(pk=es_group_id)
-        company_url = es_info.company_url
+    def _get_company_info(self, request, es_id):
+        es_info = EntrySheetesModel.objects.get(pk=es_id)
+        company_url = CompanyHomepageURLModel.objects.get(pk = es_info.homepage_url)
+        print('company_url')
+        print(company_url)
 
         wordcloud_path = get_wordcloud(company_url)
         company_info = {"wordcloud_path": wordcloud_path[1:]}
         return company_info
 
-    def get(self, request, es_group_id):
+    def get(self, request, es_id):
         template_name = 'esuits/es_edit.html'
 
-        if EntrySheetesModel.objects.filter(pk=es_group_id).exists():
+        if EntrySheetesModel.objects.filter(pk=es_id).exists():
             # ESの存在を確認
-            es_info = EntrySheetesModel.objects.get(pk=es_group_id)
+            es_info = EntrySheetesModel.objects.get(pk=es_id)
             print('es_info.author.pk: ' + str(es_info.author.pk))
             print('request.user.pk: ' + str(request.user.pk))
 
             if (es_info.author == request.user):
                 # 指定されたESが存在し，それが自分のESの場合
-                post_set = QuestionModel.objects.filter(es_group_id=es_group_id)
+                post_set = QuestionModel.objects.filter(entry_sheet=es_id)
                 formset = AnswerQuestionFormSet(instance=es_info)
 
                 # 関連したポスト一覧
-                related_posts_list = self._get_related_posts_list(request, es_group_id)
+                related_posts_list = self._get_related_posts_list(request, es_id)
 
                 # ニュース関連
                 news_list = newsapi.get_news(es_info.company)
@@ -78,7 +80,7 @@ class EsEditView(View):
                     'zipped_posts_info': zip(post_set, formset, related_posts_list),
                     'news_list': news_list,
                     'company_info': company_info,
-                    'es_group_id': es_group_id,
+                    'es_group_id': es_id,
                     'num_related_posts': len(related_posts_list)
                 }
                 return render(request, template_name, context)
@@ -99,19 +101,19 @@ class EsEditView(View):
             }
             return render(request, template_name, context)
 
-    def post(self, request, es_group_id):
+    def post(self, request, es_id):
         # TODO: 質問に対する答えを更新してDBに格納する処理を書く
         template_name = 'esuits/es_edit.html'
 
-        if EntrySheetesModel.objects.filter(pk=es_group_id).exists():
+        if EntrySheetesModel.objects.filter(pk=es_id).exists():
             # ESの存在を確認
-            es_info = EntrySheetesModel.objects.get(pk=es_group_id)
+            es_info = EntrySheetesModel.objects.get(pk=es_id)
             print('es_info.author.pk: ' + str(es_info.author.pk))
             print('request.user.pk: ' + str(request.user.pk))
 
             if (es_info.author == request.user):
                 # 指定されたESが存在し，それが自分のESの場合
-                post_set = QuestionModel.objects.filter(es_group_id=es_group_id)
+                post_set = QuestionModel.objects.filter(entry_sheet=es_id)
                 formset = AnswerQuestionFormSet(data=request.POST, instance=es_info)
 
                 if formset.is_valid():
@@ -119,13 +121,13 @@ class EsEditView(View):
                     return redirect('esuits:home')
 
                 # 関連したポスト一覧
-                related_posts_list = self._get_related_posts_list(request, es_group_id)
+                related_posts_list = self._get_related_posts_list(request, es_id)
 
                 # ニュース関連
                 news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報(ワードクラウドなど)
-                company_info = self._get_company_info(request, es_group_id)
+                company_info = self._get_company_info(request, es_id)
 
                 context = {
                     'message': 'OK',
@@ -155,21 +157,23 @@ class EsEditView(View):
 
 
 def get_related_post(request):
-    pk = int(request.GET.get('pk', ''))
+    print(request.GET.get('pk', ''))
+    pk = request.GET.get('pk', '')
     es = QuestionModel.objects.get(pk=pk)
     print(es.question, es.answer, sep='¥n')
     return JsonResponse({'question': es.question, 'answer': es.answer})
 
 
 def get_wordcloud_path(request):
-    es_group_id = int(request.GET.get('es_group_id', ''))
+    print(request.GET.get('es_group_id', ''))
+    es_group_id = request.GET.get('es_group_id', '')
     es_group = EntrySheetesModel.objects.get(pk=es_group_id)
-    company_url = es_group.company_url
+    company_url = CompanyHomepageURLModel.objects.get(pk=es_group.homepage_url)
 
     # CompanyHomepageURLModelにwordcloud_pathが存在している場合はその画像のパスを取り出す
     try:
         print(company_url + ' already exists')
-        wordcloud_path = CompanyHomepageURLModel.objects.get(company_url=company_url).word_cloud_path
+        wordcloud_path = CompanyHomepageURLModel.objects.get(homepage_url=company_url).word_cloud_path
     # 存在しない場合は新しくワードクラウドを作成
     except CompanyHomepageURLModel.DoesNotExist:
         try:
@@ -177,11 +181,18 @@ def get_wordcloud_path(request):
             print(wordcloud_path)
             # データベースに保存
 
-            new_word_cloud = CompanyHomepageURLModel(company_url=company_url,
+            new_word_cloud = CompanyHomepageURLModel(homepage_url=company_url,
                                             word_cloud_path=wordcloud_path)
             new_word_cloud.save()
             print('created new word cloud')
         except:
             print('error from word_cloud')
             return JsonResponse({'image_path': '/static/esuits/images/wordcloud_failed.png'})
+    homepage_url_record = CompanyHomepageURLModel.objects.get(homepage_url=company_url)
+    wordcloud_path = homepage_url_record.word_cloud_path
+    if wordcloud_path is None or wordcloud_path == 'dummy_path':
+        wordcloud_path = get_wordcloud(company_url)[1:]
+        # CompanyHomepageURLModelを更新
+        homepage_url_record.word_cloud_path = wordcloud_path
+        homepage_url_record.save()
     return JsonResponse({'image_path': wordcloud_path})

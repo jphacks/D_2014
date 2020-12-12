@@ -3,7 +3,7 @@ from django.urls import path, include
 # from .escreate import views as escreate_view
 from .home import views as home_view
 from .index import views as index_view
-# from .esedit import views as esedit_view
+from .esedit import views as esedit_view
 from .login import views as login_view
 from .signup import views as signup_view
 from .tagcreate import views as tagcreate_view
@@ -23,9 +23,9 @@ urlpatterns = [
     path('escreate/', escreate_view.ESCreateView.as_view(), name='es_create'),
     # path('escreate/', dv.as_view(), name='es_create'),
     # esを編集するページ
-    path('esedit/<int:es_group_id>', dv.as_view(), name='es_edit'),
-    # path('get_related/', esedit_view.get_related_post, name='get_related'),
-    # path('get_wordcloud/', esedit_view.get_wordcloud_path, name='get_wordcloud'),
+    path('esedit/<int:es_id>', esedit_view.EsEditView.as_view(), name='es_edit'),
+    path('get_related/', esedit_view.get_related_post, name='get_related'),
+    path('get_wordcloud/', esedit_view.get_wordcloud_path, name='get_wordcloud'),
     # esuits_utilsの動作確認用
     path('samples/', include('esuits.samples.urls')),
     # タグ新規作成ページ
