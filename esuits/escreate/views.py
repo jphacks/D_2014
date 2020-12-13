@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect, get_object_or_404
 from django import forms
 from django.urls import reverse_lazy, reverse
@@ -91,9 +92,6 @@ class ESCreateView(View):
         question_forms = question_formset.save(commit=False)
 
         if question_formset.is_valid():
-            print('post_formset')
-            print(question_formset.is_valid())
-            question_forms = question_formset.save(commit=False)
             for question_form in question_forms:
                 question_form.entry_sheet = es_record
                 question_form.save()
@@ -101,6 +99,4 @@ class ESCreateView(View):
             print('saved post_form')
         else:
             print('failed save post_form')
-        print(es_record.pk)
         return redirect('esuits:es_edit', es_id=es_record.pk)
-        # return redirect('esuits:home')

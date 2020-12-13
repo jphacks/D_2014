@@ -4,6 +4,7 @@ from django import forms
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.http.response import JsonResponse
+from pprint import pprint
 
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
 from ..models import CustomUserModel, TagModel, QuestionModel, EntrySheetesModel, CompanyHomepageURLModel
@@ -52,6 +53,9 @@ class EsEditView(View):
         company_info = {"wordcloud_path": wordcloud_path[1:]}
         return company_info
 
+    def _get_char_num(self, question_form):
+        return len(question_form.answer)
+    
     def get(self, request, es_id):
         template_name = 'esuits/es_edit.html'
         print('start get es edit')
@@ -104,7 +108,6 @@ class EsEditView(View):
             return render(request, template_name, context)
 
     def post(self, request, es_id):
-        # TODO: 質問に対する答えを更新してDBに格納する処理を書く
         template_name = 'esuits/es_edit.html'
 
         if EntrySheetesModel.objects.filter(pk=es_id).exists():
@@ -117,8 +120,14 @@ class EsEditView(View):
                 # 指定されたESが存在し，それが自分のESの場合
                 post_set = QuestionModel.objects.filter(entry_sheet=es_id)
                 formset = AnswerQuestionFormSet(data=request.POST, instance=es_info)
-
+                forms = formset.save(commit=False)
+                
                 if formset.is_valid():
+                    for form in forms:
+                        form.char_num = self._get_char_num(form)
+                        print('文字数')
+                        print(form.char_num)
+                        form.save()
                     formset.save()
                     return redirect('esuits:home')
 
