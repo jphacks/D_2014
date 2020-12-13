@@ -4,10 +4,6 @@ from django import forms
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from pprint import pprint
-from django.db.models import Q
 
 from ..models import CustomUserModel
 # Create your views here.

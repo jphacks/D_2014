@@ -1,19 +1,19 @@
 from django import forms
-from ..models import PostModel, ESGroupModel
+from ..models import QuestionModel, EntrySheetesModel
 
 
 class AnswerQuestionForm(forms.ModelForm):
     '''ポスト (ESの中の一つの質問) に答えるためのフォーム'''
     class Meta:
-        model = PostModel
+        model = QuestionModel
         fields = (
             'answer',
         )
 
 
 AnswerQuestionFormSet = forms.inlineformset_factory(
-    parent_model=ESGroupModel,
-    model=PostModel,
+    parent_model=EntrySheetesModel,
+    model=QuestionModel,
     form=AnswerQuestionForm,
     extra=0,
     can_delete=False
