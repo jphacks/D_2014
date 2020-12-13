@@ -1,32 +1,36 @@
-# -*- coding: utf-8 -*-
 from django.shortcuts import render, redirect, get_object_or_404
 from django import forms
 from django.urls import reverse_lazy, reverse
 from django.views import View
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from pprint import pprint
+from django.db.models import Q
 
-from .forms import CreateEntrySheetForm, CreateQuestionForm
-from ..models import CompanyHomepageURLModel, CompanyModel, CustomUserModel, TagModel, EntrySheetesModel, QuestionModel
+from .forms import CreateESForm, CreatePostForm
+from ..models import CustomUserModel, TagModel, PostModel, ESGroupModel
 # Create your views here.
 
 
 class ESCreateView(View):
-    '''エントリーシートそのものと質問を作成'''
+    '''ポストの質問を作成'''
 
     def get(self, request, *args, **kwargs):
         login_user_id = request.user.id
         template = 'esuits/es_create.html'
-        tags = TagModel.objects.filter(authors=login_user_id)
+        tags = TagModel.objects.filter(author=login_user_id)
         num_tags = len(tags)
         # ポストフォームはformsetを使用
-        QuestionFormset = forms.formset_factory(
+        PostFormset = forms.formset_factory(
             # PostModel,
-            form=CreateQuestionForm,
+            form=CreatePostForm,
             extra=1,
         )
         context = {
-            'es_form': CreateEntrySheetForm(),
+            'es_form': CreateESForm(),
             # 'post_form': CreatePostForm(),
-            'question_formset': QuestionFormset(form_kwargs={'user': request.user}),
+            'post_formset': PostFormset(form_kwargs={'user': request.user}),
             'tags': tags,
             'num_tags': num_tags,
             'user_id': login_user_id,
@@ -35,68 +39,62 @@ class ESCreateView(View):
 
     def post(self, request, *args, **kwargs):
         login_user_id = request.user.id
-        author = CustomUserModel.objects.get(pk=login_user_id)
-        # request.POSTを修正するためにコピーする．もっといい方法ありそう
-        request_post_copy = request.POST.copy()
+        # es情報を取得(必要なし)
+        # company = request_copy['company']
+        # event_type = request_copy['event_type']
+        # author = login_user_id
+        # created_date = request_copy['created_date']
 
-        # ESテーブルを更新
-        '''
-        ESを保存するときにやること
-        1.企業名から企業テーブルのIDを特定．ない場合は新規登録
-        2.企業URLテーブルからURLのIDを特定．ない場合は新規登録
-        '''
-        # 企業名から企業テーブルのIDを特定．ない場合は新規登録
-        company_name = request.POST['company']
-        try:
-            company_record = CompanyModel.objects.get(company_name=company_name)
-        except CompanyModel.DoesNotExist:
-            company_record = CompanyModel(company_name=company_name)
-            company_record.save()
-        request_post_copy['company'] = company_record
-
-        # 企業URLテーブルからURLのIDを特定．ない場合は新規登録
-        homepage_url = request.POST['homepage_url']
-        try:
-            homepage_url_record = CompanyHomepageURLModel.objects.get(homepage_url=homepage_url)
-        except CompanyHomepageURLModel.DoesNotExist:
-            homepage_url_record = CompanyHomepageURLModel(company=company_record, homepage_url=homepage_url)
-            homepage_url_record.save()
-        request_post_copy['homepage_url'] = homepage_url_record
-
-        # esを登録
-        es_form = CreateEntrySheetForm(request_post_copy)
+        # 先にESフォームからの情報をデータベースに格納
+        # es_form = CreateESForm(request_copy, prefix='es')
+        es_form = CreateESForm(request.POST)
+        print(request.POST)
+        print('----------------------')
+        print(es_form)
         if es_form.is_valid():
+            # form.save()では，作成されたレコードが返ってくる．作成されたレコードのpkを取得
             es_file = es_form.save(commit=False)
-            es_file.author = author
+            es_file.author = CustomUserModel.objects.get(pk=login_user_id)
             es_file.is_editing = True
-            # form.save()では，作成されたレコードが返ってくる．
-            es_record = es_form.save()
+            es_group_id = es_form.save()
             print('saved es_form')
         else:
             print('failed save es_form')
 
-        # 質問テーブルを更新
-        question_num = int(request.POST['form-TOTAL_FORMS'])
+        # postフォームをデータベースに格納
+
+        post_num = int(request.POST['form-TOTAL_FORMS'])
+        # 値を変更する
+        # 各ポストのes group idを更新
+        # for post_num in range(post_num):
+        #     post_name = 'form-' + str(post_num) + '-'
+        #     es_group_id_key = post_name + 'es_group_id'
+        #     request_copy[es_group_id_key] = es_group_id
+        # print(request_copy)
 
         # 回答の文字数を取得
         # request_copy['char_num'] = len(request.POST['answer'])
         # request_copy['es_group_id'] = es_group_id
 
-        QuestionFormset = forms.modelformset_factory(
-            model=QuestionModel,
-            form=CreateQuestionForm,
-            extra=question_num,
-        )
-        
-        question_formset = QuestionFormset(request_post_copy, form_kwargs={'user': request.user})
-        question_forms = question_formset.save(commit=False)
+        # post_form = CreatePostForm(request_copy)
 
-        if question_formset.is_valid():
-            for question_form in question_forms:
-                question_form.entry_sheet = es_record
-                question_form.save()
-            question_formset.save_m2m()
+        PostFormset = forms.modelformset_factory(
+            model=PostModel,
+            form=CreatePostForm,
+            extra=post_num,
+        )
+        post_formset = PostFormset(request.POST, form_kwargs={'user': request.user})
+
+        if post_formset.is_valid():
+            print('post_formset')
+            print(post_formset.is_valid())
+            post_forms = post_formset.save(commit=False)
+            for post_form in post_forms:
+                post_form.es_group_id = es_group_id
+                post_form.save()
+            post_formset.save_m2m()
             print('saved post_form')
         else:
             print('failed save post_form')
-        return redirect('esuits:es_edit', es_id=es_record.pk)
+
+        return redirect('esuits:es_edit', es_group_id=es_group_id.pk)

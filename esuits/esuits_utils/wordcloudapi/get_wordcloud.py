@@ -47,7 +47,7 @@ def get_wordcloud(url):
     
     keitaiso_end_time = time.time() 
     print()
-    print("形態素解析 time:", keitaiso_end_time - crawl_end_time, "seconds")
+    print("形態素解析 time:",keitaiso_end_time - crawl_end_time, "seconds")
     print()
 
     # 単語ごとのtfidfを計算する．
@@ -96,7 +96,6 @@ def main():
         url = sys.argv[1]
 
     get_wordcloud(url)
-
-
+    
 if __name__ == "__main__":
     main()

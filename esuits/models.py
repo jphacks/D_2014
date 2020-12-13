@@ -1,106 +1,89 @@
-# -*- coding: utf-8 -*-
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
+from django.contrib.auth.signals import user_logged_in
 
 # Create your models here.
 
 
 class CustomUserModel(AbstractUser):
-    '''ユーザーテーブル'''
-
+    '''カスタムユーザークラス'''
     class Meta(object):
-        db_table = 'custom_users'
+        db_table = 'custom_user'
 
     def __str__(self):
         return self.username
 
 
 class TagModel(models.Model):
-    '''タグテーブル'''
+    '''タグモデル'''
 
     class Meta(object):
-        db_table = 'tags'
+        db_table = 'tag_table'
 
     tag_name = models.CharField(verbose_name='タグ名', max_length=255)
-    authors = models.ManyToManyField(CustomUserModel, verbose_name='作成者')
+    author = models.ForeignKey(CustomUserModel, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.tag_name
 
 
-class CompanyModel(models.Model):
-    '''企業テーブル'''
+class WordCloudModel(models.Model):
+    '''ワードクラウドを保存するデータベース'''
 
     class Meta(object):
-        db_table = 'companies'
+        db_table = 'word_cloud'
 
-    company_name = models.CharField(verbose_name='企業名', max_length=100)
-
-    def __str__(self):
-        return self.company_name
+    company_url = models.URLField(verbose_name='企業ホームページ', max_length=200)
+    word_cloud_image_url = models.URLField(verbose_name='ワードクラウドURL', max_length=200)
 
 
-class CompanyHomepageURLModel(models.Model):
-    # WordCloudModel→
-    '''企業URLテーブル'''
+class ESGroupModel(models.Model):
+    '''ESモデル'''
 
     class Meta(object):
-        db_table = 'homepage_urls'
+        db_table = 'esgroup_table'
 
-    company = models.ForeignKey(CompanyModel, verbose_name='企業', on_delete=models.CASCADE)
-    homepage_url = models.URLField(verbose_name='企業URL', max_length=200)
-    word_cloud_path = models.CharField(verbose_name='ワードクラウドパス', max_length=255
-                                        , null=True, blank=True)
-
-    def __str__(self):
-        return self.homepage_url
-
-
-class EntrySheetesModel(models.Model):
-    # ESGroupModel→
-    '''エントリーシートテーブル'''
-
-    class Meta(object):
-        db_table = 'entry_sheets'
-
-    company = models.ForeignKey(CompanyModel, verbose_name='企業 ',
-                                on_delete=models.CASCADE, null=True, blank=True)
-    homepage_url = models.ForeignKey(
-        CompanyHomepageURLModel, verbose_name='ホームページURL', on_delete=models.CASCADE, null=True, blank=True)
-    selection_type = models.CharField(verbose_name='選考種別', max_length=50, blank=True, null=True)
-    author = models.ForeignKey(CustomUserModel, verbose_name='作成者', on_delete=models.CASCADE)
-    is_editing = models.BooleanField(verbose_name='作成中or完成', default=True)
-    created_date = models.DateTimeField(verbose_name='作成日時', default=timezone.now)
+    company = models.CharField(verbose_name='会社名', max_length=100)
+    event_type = models.CharField(verbose_name='イベントタイプ', max_length=50, blank=True, null=True)
+    company_url = models.URLField(verbose_name='企業ホームページ', max_length=200)
+    author = models.ForeignKey(CustomUserModel, verbose_name='作成者',
+                               on_delete=models.CASCADE, blank=True)
+    is_editing = models.BooleanField(verbose_name='作成中', default=True)
+    created_date = models.DateTimeField(verbose_name='作成日時', default=timezone.now, blank=True)
     deadline_date = models.DateTimeField(
         verbose_name='提出期限', default=timezone.now, blank=True, null=True)
+    word_cloud = models.ForeignKey(WordCloudModel, verbose_name='ワードクラウド',
+                                   on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
-        if self.selection_type is None:
-            return str(self.pk) + '_' + self.company.company_name + '_none'
-        else:
-            return str(self.pk) + '_' + self.company.company_name + '_' + self.selection_type
+        return str(self.pk) + '_' + self.company + '_' + self.event_type
 
 
-class QuestionModel(models.Model):
-    # PostModel→
-    '''質問デーブル'''
+class PostModel(models.Model):
+    '''ポストモデル'''
 
     class Meta(object):
-        db_table = 'questions'
+        db_table = 'post_table'
 
-    entry_sheet = models.ForeignKey(
-        EntrySheetesModel, on_delete=models.CASCADE, verbose_name='エントリーシート')
     question = models.TextField(verbose_name='質問')
     answer = models.TextField(verbose_name='', blank=True, null=True)
-    tags = models.ManyToManyField(TagModel, verbose_name='タグ名', null=True, blank=True)
+    # create_date = models.DateTimeField(verbose_name='作成日時', default=timezone.now)
+    tags = models.ManyToManyField(TagModel, verbose_name='タグ名', blank=True)
+
+    # OPEN_INFO_CHOICES = [
+    #     ('public', '公開'),
+    #     ('private', '非公開')
+    # ]
+    # open_info = models.CharField(verbose_name='公開', max_length=20,
+    #                              choices=OPEN_INFO_CHOICES, default='private')
+    # company = models.CharField(verbose_name='会社名', max_length=50, blank=True, null=True)
+    # state = models.CharField(verbose_name='状況', max_length=50, blank=True, null=True)
+    # author = models.ForeignKey(CustomUserModel, verbose_name='ユーザ名', on_delete=models.CASCADE)
+    es_group_id = models.ForeignKey(ESGroupModel, verbose_name='ES名',
+                                    on_delete=models.CASCADE, blank=True, null=True)
     char_num = models.IntegerField(default=0, blank=True)
-    OPEN_INFO_CHOICES = [
-        ('public', '公開'),
-        ('private', '非公開')
-    ]
-    is_open = models.CharField(verbose_name='公開or非公開', max_length=20,
-                                 choices=OPEN_INFO_CHOICES, default='private', blank=True)
 
     def __str__(self):
         return self.question

@@ -3,6 +3,11 @@ from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from django import forms
 from django.urls import reverse_lazy, reverse
 from django.views import View
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from pprint import pprint
+from django.db.models import Q
 
 from .forms import CreateTagForm
 from ..models import TagModel, CustomUserModel
@@ -15,8 +20,7 @@ class TagCreateView(View):
     def get(self, request, *args, **kwargs):
         login_user_id = request.user.id
         template = 'esuits/tag_create.html'
-        tags = TagModel.objects.filter(authors=login_user_id)
-        print(tags)
+        tags = TagModel.objects.filter(author=login_user_id)
         TagFormset = forms.formset_factory(
             form=CreateTagForm,
             extra=1,
@@ -30,7 +34,6 @@ class TagCreateView(View):
 
     def post(self, request, *args, **kwargs):
         login_user_id = request.user.id
-        author = CustomUserModel.objects.get(pk=login_user_id)
         post_num = int(request.POST['form-TOTAL_FORMS'])
         TagFormset = forms.modelformset_factory(
             model=TagModel,
@@ -42,14 +45,8 @@ class TagCreateView(View):
         if tag_formset.is_valid():
             tag_forms = tag_formset.save(commit=False)
             for tag_form in tag_forms:
-                # タグそのものが存在する場合はそれを取得して，そうでない場合は新規作成
-                try:
-                    tag = TagModel.objects.get(tag_name=tag_form.tag_name)
-                except TagModel.DoesNotExist:
-                    tag = TagModel(tag_name=tag_form.tag_name)
-                    tag.save()
-                    print('saved new tag')
-                tag.authors.add(author)
+                tag_form.author = CustomUserModel.objects.get(pk=login_user_id)
+                tag_form.save()
             print('saved post_form')
         else:
             print('failed save post_form')
