@@ -4,6 +4,7 @@ from django import forms
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from django.http.response import JsonResponse
+from django.conf import settings
 from pprint import pprint
 
 from .forms import AnswerQuestionFormSet, AnswerQuestionForm
@@ -39,20 +40,24 @@ class EsEditView(View):
         ]
         return news_list
 
-    # 企業の情報を取得 (今は空)
+    # 企業の情報を取得
     def _get_company_info(self, request, es_id):
         es_info = EntrySheetesModel.objects.get(pk=es_id)
         company_url_info = CompanyHomepageURLModel.objects.get(company=es_info.company)
         company_url = company_url_info.homepage_url
-        print('company_url')
-        print(type(company_url))
-        print(company_url)
-
-        wordcloud_path = get_wordcloud(company_url)
-        print(wordcloud_path)
-        company_info = {"wordcloud_path": wordcloud_path[1:]}
+        # 現状デプロイ時にワードクラウドは使用しない
+        print(settings.DEBUG)
+        if not settings.DEBUG:
+            print('開発環境')
+            wordcloud_path = get_wordcloud(company_url)
+            company_info = {"wordcloud_path": wordcloud_path[1:]}
+        else:
+            print('本番環境')
+            wordcloud_path = '/static/esuits/images/kanban_jyunbi.png'
+            company_info = {"wordcloud_path": wordcloud_path}
         return company_info
 
+    # 回答の文字数を計算
     def _get_char_num(self, question_form):
         return len(question_form.answer)
     
@@ -75,8 +80,8 @@ class EsEditView(View):
                 news_list = newsapi.get_news(es_info.company)
 
                 # 企業の情報(ワードクラウドなど)
-                print('企業情報の取得を開始')
                 company_info = self._get_company_info(request, es_id)
+                print(company_info)
                 # company_info = None
 
                 context = {
@@ -183,6 +188,12 @@ def get_wordcloud_path(request):
     company_url_info = CompanyHomepageURLModel.objects.get(company=es_info.company)
     company_url = company_url_info.homepage_url
 
+    # 現状デプロイ時にワードクラウドは使用しない
+    if not settings.DEBUG:
+        print('本番環境')
+        return JsonResponse({'image_path': '/static/esuits/images/kanban_jyunbi.png'})
+
+    # 以下開発環境
     # CompanyHomepageURLModelにwordcloud_pathが存在している場合はその画像のパスを取り出す
     try:
         print(company_url + ' already exists')
