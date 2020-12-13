@@ -1,35 +1,36 @@
-# -*- coding: utf-8 -*-
 from django.urls import path, include
-# from .escreate import views as escreate_view
-from .home.views import HomeView
-from .index.views import IndexView
-from .esedit.views import EsEditView
-from .login.views import LoginView
-from .signup.views import SignupView
-from .tagcreate.views import TagCreateView
-from .logout.views import logoutfunc
-from .escreate.views import ESCreateView
-from .question_list.views import QuestionListView
-from .esedit.views import get_related_post, get_wordcloud_path
-
+from . import views
+from .shinkiSakusei import views as shinkisakusei_view
+from .escreate import views as escreate_view
+from .home import views as home_view
+from .index import views as index_view
+from .esedit import views as esedit_view
+from .login import views as login_view
+from .signup import views as signup_view
+from .tagcreate import views as tagcreate_view
+from .logout import views as logout_view
+from django.shortcuts import redirect
 
 app_name = 'esuits'
 urlpatterns = [
-    path('', IndexView.as_view(), name='index'),
-    path('login/', LoginView.as_view(), name='login'),
-    path('logout/', logoutfunc, name='logout'),
-    path('signup/', SignupView.as_view(), name='signup'),
-    path('home/', HomeView.as_view(), name='home'),
+    path('', index_view.IndexView.as_view(), name='index'),
+    path('login/', login_view.LoginView.as_view(), name='login'),
+    path('logout/', logout_view.logoutfunc, name='logout'),
+    path('signup/', signup_view.SignupView.as_view(), name='signup'),
+    path('home/', home_view.HomeView.as_view(), name='home'),
     # esの質問を登録するページ
-    path('escreate/', ESCreateView.as_view(), name='es_create'),
+    path('escreate/', escreate_view.ESCreateView.as_view(), name='es_create'),
     # esを編集するページ
-    path('esedit/<int:es_id>', EsEditView.as_view(), name='es_edit'),
-    path('get_related/', get_related_post, name='get_related'),
-    path('get_wordcloud/', get_wordcloud_path, name='get_wordcloud'),
+    path('es_edit/<int:es_group_id>', esedit_view.EsEditView.as_view(), name='es_edit'),
+    path('get_related/', esedit_view.get_related_post, name='get_related'),
+    path('get_wordcloud/', esedit_view.get_wordcloud_path, name='get_wordcloud'),
+
+    # 新規作成ページ
+    path('shinkiSakusei/', shinkisakusei_view.SinkiSakuseiView.as_view(), name='shinkiSakusei'),
+
     # esuits_utilsの動作確認用
     path('samples/', include('esuits.samples.urls')),
+
     # タグ新規作成ページ
-    path('tagcreate/', TagCreateView.as_view(), name='tag_create'),
-    # 質問一覧表示ページ
-    path('questions/', QuestionListView.as_view(), name='questions'),
+    path('tagcreate/', tagcreate_view.TagCreateView.as_view(), name='tag_create'),
 ]

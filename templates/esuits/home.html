@@ -39,7 +39,7 @@
               {% for es in editing %}
               <tr>
                 <td class="row-company"><a href="{% url 'esuits:es_edit' es.pk %}">{{es.company}}</a></td>
-                <td>{{es.selection_type}}</td>
+                <td>{{es.event_type}}</td>
                 <td>{{es.deadline_date|date:"Y/m/j H:i:s"}}</td>
                 <form action="" method="POST">{% csrf_token %}
                   <input type="hidden" value="{{ es.pk }}" name="target_es">
@@ -64,7 +64,7 @@
               {% for es in finished %}
               <tr>
                 <td class="row-company"><a href="{% url 'esuits:es_edit' es.pk %}">{{es.company}}</a></td>
-                <td>{{es.selection_type}}</td>
+                <td>{{es.event_type}}</td>
                 <td>{{es.deadline_date|date:"Y/m/j H:i:s"}}</td>
                 <form action="" method="POST">{% csrf_token %}
                   <input type="hidden" value="{{ es.pk }}" name="target_es">
